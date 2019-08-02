@@ -24,6 +24,10 @@ yarn add react-native-elements
 
 yarn add react-native-vector-icons ?
 
+yarn add react-native-swiper@nightly
+
+yarn add react-native-page-scrollview
+
 
 react知识点：
 

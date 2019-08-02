@@ -1,14 +1,27 @@
 import React, {Component} from 'react';
 
-import AndroidGank from './AndroidGank'
-import Welfare from './Welfare'
-import Ganks from './Ganks'
-import MyWeb from './MyWeb'
-import ImagePreView from './ImagePreView'
-import { createMaterialTopTabNavigator, createAppContainer,createStackNavigator } from 'react-navigation';
+import RegisterLogin from './RegisterLogin'
+import {
+    createBottomTabNavigator,
+    createAppContainer, createMaterialTopTabNavigator, createStackNavigator,
+} from 'react-navigation';
+import {
+    StyleSheet,
+    View,
+    Image,
+    Text,
+    TouchableOpacity,
+    ToastAndroid, NativeModules,
+} from 'react-native';
 
+import AndroidGank from "./AndroidGank";
+import Ganks from "./Ganks";
+import Welfare from "./Welfare";
+import MyWeb from "./MyWeb";
+import ImagePreView from "./ImagePreView";
+import WanAndroid from "./WanAndroid";
 
-const navigator = createMaterialTopTabNavigator({
+const topTabNavigator = createMaterialTopTabNavigator({
         AndroidGank: AndroidGank,
         Ganks: Ganks,
         Welfare: Welfare,
@@ -17,18 +30,36 @@ const navigator = createMaterialTopTabNavigator({
         initialRouteName : "AndroidGank",
     });
 
-const TabStack = createStackNavigator({
-    Home: {
-        screen: navigator,
+const TopTabStack = createStackNavigator({
+    HomeTab: {
+        screen: topTabNavigator,
         navigationOptions: {
-            header: null
+            header: null,
         },
     },
     MyWeb: MyWeb,
     ImagePreView: ImagePreView
 });
 
-const AppContainer = createAppContainer(TabStack);
+const navigator = createBottomTabNavigator({
+        WanAndroid: WanAndroid,
+        Home: {
+            screen:TopTabStack,
+            navigationOptions:() =>({
+                tabBarLabel:"主页",
+                /*tabBarIcon: ({ tintColor }) => (
+                    <Image
+                        source={require('./img/ic_action_collection.png')}
+                        style={[styles.icon, { tintColor: tintColor }]}
+                    />
+                )*/
+            })
+        },
+        RegisterLogin: RegisterLogin,
+    });
+
+
+const AppContainer = createAppContainer(navigator);
 
 export default class App extends React.Component {
     render() {
