@@ -5,14 +5,6 @@ import {
     createBottomTabNavigator,
     createAppContainer, createMaterialTopTabNavigator, createStackNavigator,
 } from 'react-navigation';
-import {
-    StyleSheet,
-    View,
-    Image,
-    Text,
-    TouchableOpacity,
-    ToastAndroid, NativeModules,
-} from 'react-native';
 
 import AndroidGank from "./AndroidGank";
 import Ganks from "./Ganks";
@@ -20,8 +12,11 @@ import Welfare from "./Welfare";
 import MyWeb from "./MyWeb";
 import ImagePreView from "./ImagePreView";
 import WanAndroid from "./WanAndroid";
+import KnowledgeTree from "./KnowledgeTree";
 
-const topTabNavigator = createMaterialTopTabNavigator({
+//----------------------------发现（干货）------------------------------------
+
+const FoundTabNavigator = createMaterialTopTabNavigator({
         AndroidGank: AndroidGank,
         Ganks: Ganks,
         Welfare: Welfare,
@@ -30,9 +25,9 @@ const topTabNavigator = createMaterialTopTabNavigator({
         initialRouteName : "AndroidGank",
     });
 
-const TopTabStack = createStackNavigator({
-    HomeTab: {
-        screen: topTabNavigator,
+const FoundTabStack = createStackNavigator({
+    FoundTab: {
+        screen: FoundTabNavigator,
         navigationOptions: {
             header: null,
         },
@@ -41,12 +36,37 @@ const TopTabStack = createStackNavigator({
     ImagePreView: ImagePreView
 });
 
-const navigator = createBottomTabNavigator({
+//-----------------------------主页（玩安卓）-----------------------------------
+
+const wanAndroidTabNavigator = createMaterialTopTabNavigator({
         WanAndroid: WanAndroid,
-        Home: {
-            screen:TopTabStack,
+        KnowledgeTree: KnowledgeTree,
+    },
+    {
+        initialRouteName : "WanAndroid",
+    });
+
+const WanAndroidTabStack = createStackNavigator({
+    WanAndroidTab: {
+        screen: wanAndroidTabNavigator,
+        navigationOptions: {
+            header: null,
+        },
+    },
+    MyWeb: MyWeb
+});
+
+const navigator = createBottomTabNavigator({
+        WanAndroidTab: {
+            screen:WanAndroidTabStack,
             navigationOptions:() =>({
                 tabBarLabel:"主页",
+            })
+        },
+        FoundTab: {
+            screen:FoundTabStack,
+            navigationOptions:() =>({
+                tabBarLabel:"发现",
                 /*tabBarIcon: ({ tintColor }) => (
                     <Image
                         source={require('./img/ic_action_collection.png')}

@@ -7,13 +7,15 @@ import {
     View,
     ActivityIndicator,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity, DeviceEventEmitter
 } from "react-native";
 import PageScrollView from 'react-native-page-scrollview';
+import Swiper from 'react-native-swiper';
 
+const EVENT_NAME = "notifyChangeData";
+let category = "list";
 let pageNo = 0;//当前第几页
 const REQUEST_BANNER_URL = "https://www.wanandroid.com/banner/json";
-let isCanLoadMore = false;
 
 /**
  * 玩安卓
@@ -27,52 +29,38 @@ export default class WanAndroid extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selected:true,
-            unSelected:false,
             isLoading: true,
             isRefreshing: false,
             //网络请求状态
             error: false,
             errorInfo: "",
             dataArray: [],
-            bannerDataArray:[],
             showFoot: 0, // 控制foot， 0：隐藏footer  1：已加载完成,没有更多数据   2 ：显示加载中
         };
     }
 
     componentDidMount() {
-        this.fetchBannerData();
-    }
-
-    fetchBannerData() {
-        fetch(REQUEST_BANNER_URL)
-            .then((response) => {
-                return response.json();
-            })
-            .then((responseData) => {
-                let data = responseData.data;
-                let bannerData = [];
-                data.map(function (item) {
-                    bannerData.push({
-                        uri:item.imagePath
-                    });
-                });
-                this.setState({
-                    isLoading: false,
-                    bannerDataArray: bannerData,
-                });
-                data = null;
-                bannerData = null;
-                this.fetchData();
-            })
-            .catch((error) => {
-                console.log(error)
+        this.fetchData(category, pageNo);
+        this.listener = DeviceEventEmitter.addListener(EVENT_NAME, (category) => {
+            console.log("listener = " + category);
+            this.category = category;
+            pageNo = 0;
+            this.fetchData(category, pageNo);
+            this.setState({
+                isRefreshing: true,
+                isLoading: false
             });
+        });
     }
 
-    fetchData() {
-        const requestUrl = "https://www.wanandroid.com/article/list/" + pageNo + "/json";
-        console.log(requestUrl);
+    componentWillUnmount() {
+        if (this.listener) {
+            this.listener.remove();
+        }
+    }
+
+    fetchData(category, pageNo) {
+        const requestUrl = "https://www.wanandroid.com/article/" + category + "/" + pageNo + "/json";
         fetch(requestUrl)
             .then((response) => {
                 return response.json();
@@ -83,6 +71,7 @@ export default class WanAndroid extends Component {
                 /**
                  * 这里改变dataArray的值是因为防止下拉刷新数据的时候，屏幕闪烁
                  */
+                console.log(this.state.isRefreshing);
                 if (this.state.isRefreshing) {
                     this.setState({
                         dataArray:[]
@@ -112,43 +101,19 @@ export default class WanAndroid extends Component {
             return this.renderLoadingView();
         }
         return (
-            <ScrollView>
-                <PageScrollView
-                    style={{width:null,height:260/16*9}}
-                    imageArr={this.state.bannerDataArray} />
-
-                    <View style={{flex:1, flexDirection:'row', marginTop:20, marginLeft:5}}>
-                        <Text style={this.state.selected ? {color:'red'} : {color:'gray'}} onPress={this._clickText1.bind(this)}>最新博文</Text>
-                        <Text > | </Text>
-                        <Text style={this.state.unSelected ? {color:'red'} : {color:'gray'}} onPress={this._clickText2.bind(this)}>最新项目</Text>
-                    </View>
-
-                <FlatList
-                    style={{marginTop:10}}
-                    data={this.state.dataArray}
-                    renderItem={this.renderData.bind(this)}
-                    ListFooterComponent={this._renderFooter.bind(this)}
-                    onEndReached={this._onEndReached.bind(this)}
-                    onRefresh={this._onRefresh.bind(this)}
-                    refreshing={this.state.isRefreshing}
-                    ItemSeparatorComponent={ItemDivideComponent}
-                    onEndReachedThreshold={0.1}
-                    keyExtractor={item => item.id}
-                    onContentSizeChange={()=>{
-                        this.isCanLoadMore = true // flatview内部组件布局完成以后会调用这个方法
-                    }}
-                />
-            </ScrollView>
+            <FlatList
+                data={this.state.dataArray}
+                renderItem={this.renderData.bind(this)}
+                ListHeaderComponent={FlatListHeaderComponent}
+                ListFooterComponent={this._renderFooter.bind(this)}
+                onEndReached={this._onEndReached.bind(this)}
+                onRefresh={this._onRefresh.bind(this)}
+                refreshing={this.state.isRefreshing}
+                ItemSeparatorComponent={ItemDivideComponent}
+                onEndReachedThreshold={0.1}
+                keyExtractor={item => item.id} />
         );
     }
-
-    _clickText1 = ()=> {
-        this.setState({selected:true, unSelected:false})
-    };
-
-    _clickText2 = ()=> {
-        this.setState({selected:false, unSelected:true})
-    };
 
     renderLoadingView() {
         return (
@@ -176,7 +141,7 @@ export default class WanAndroid extends Component {
     }
 
     _clickItem = (item) => {
-        this.props.navigation.navigate("MyWeb", {url: item.url, desc: item.desc});
+        this.props.navigation.navigate("MyWeb", {url: item.link, desc: item.title});
     };
 
     _renderFooter() {
@@ -214,32 +179,133 @@ export default class WanAndroid extends Component {
         this.setState({
             showFoot: 2,
         });
-        // 等待页面布局完成以后，在让加载更多
-        if (this.isCanLoadMore){
-            //获取数据
-            this.fetchData();
-            this.isCanLoadMore = false // 加载更多时，不让再次的加载更多
-        }
+        //获取数据
+        this.fetchData(category, pageNo);
     }
 
     _onRefresh() {
         this.setState({
             isRefreshing:true,
         });
-        pageNo = 2;
-        this.fetchData();
+        pageNo = 0;
+        this.fetchData(category, pageNo);
+    }
+}
+
+class FlatListHeaderComponent extends Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            selected:true,
+            unSelected:false,
+            bannerDataArray:[],
+        };
+    }
+
+    render() {
+        return (
+            <View>
+                <Swiper
+                    style={styles.wrapper}
+                    loop={true}
+                    autoplay={true}
+                    autoplayTimeout={3}
+                    horizontal={true}
+                    paginationStyle={{bottom: 10}}
+                    showsButtons={false}
+                    showsPagination={true}
+                    removeClippedSubviews={false}>
+                    <Image source={{ uri: 'https://www.wanandroid.com/blogimgs/bb4937de-b6f3-4c7e-b7d0-66d02f54abee.jpeg' }} style={styles.image}/>
+                    <Image source={{ uri: 'https://www.wanandroid.com/blogimgs/50c115c2-cf6c-4802-aa7b-a4334de444cd.png' }} style={styles.image}/>
+                    <Image source={{ uri: 'https://www.wanandroid.com/blogimgs/62c1bd68-b5f3-4a3c-a649-7ca8c7dfabe6.png' }} style={styles.image}/>
+                    <Image source={{ uri: 'https://www.wanandroid.com/blogimgs/90c6cc12-742e-4c9f-b318-b912f163b8d0.png' }} style={styles.image}/>
+                </Swiper>
+
+                <View style={{flex:1, flexDirection:'row', marginTop:15, marginLeft:5, marginBottom:15}}>
+                    <Text style={this.state.selected ? {color:'red'} : {color:'gray'}} onPress={this._clickText1.bind(this)}>最新博文</Text>
+                    <Text > | </Text>
+                    <Text style={this.state.unSelected ? {color:'red'} : {color:'gray'}} onPress={this._clickText2.bind(this)}>最新项目</Text>
+                </View>
+            </View>
+        );
+    }
+
+    renderImage() {
+        console.log("renderImage");
+        const imgsArray = [];
+        let images = this.state.bannerDataArray;
+        images.map(function (item) {
+            console.log(item);
+            imgsArray.push(
+                <View style={styles.slide}>
+                    <Image source={item} style={styles.image}/>
+                </View>
+            );
+        });
+        return imgsArray;
+    }
+
+    _clickText1 = ()=> {
+        this.setState({selected:true, unSelected:false});
+        setTimeout(()=> {
+            DeviceEventEmitter.emit(EVENT_NAME, "list");
+        }, 500);//延迟500ms执行
+    };
+
+    _clickText2 = ()=> {
+        this.setState({selected:false, unSelected:true});
+        setTimeout(()=> {
+            DeviceEventEmitter.emit(EVENT_NAME, "listproject");
+        }, 500);//延迟500ms执行
+    };
+
+    componentDidMount() {
+        this.fetchBannerData();
+    }
+
+    fetchBannerData() {
+        fetch(REQUEST_BANNER_URL)
+            .then((response) => {
+                return response.json();
+            })
+            .then((responseData) => {
+                let data = responseData.data;
+                let bannerData = [];
+                data.map(function (item) {
+                    bannerData.push({
+                        uri:item.imagePath
+                    });
+                });
+                this.setState({
+                    bannerDataArray: bannerData,
+                });
+                data = null;
+                bannerData = null;
+            })
+            .catch((error) => {
+                console.log(error)
+            });
     }
 }
 
 class ItemDivideComponent extends Component {
     render() {
         return (
-            <View style={{height: 1, backgroundColor: 'gray'}}/>
+            <View style={{height: 1, backgroundColor: 'skyblue'}}/>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    wrapper: {
+        height: 200,
+    },
+    slide: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: 'transparent'
+    },
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -251,9 +317,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     image: {
-        width: 200,
-        height: 100,
-        flex: 1
+        width: null,
+        height: 200,
     },
     content: {
         flexDirection: 'row',
