@@ -24,7 +24,7 @@ export default class KnowledgeTree extends Component {
             })
             .then((responseData) => {
                 let data = responseData.data;
-                console.log(data);
+                // console.log(data);
                 this.setState({
                     //复制数据源
                     dataArray: this.state.dataArray.concat(data),
@@ -41,7 +41,15 @@ export default class KnowledgeTree extends Component {
         let items = this.state.dataArray.map((value, position) => {
             return (
                 <View key={position}>
-                    <FlowView  ref ={this.state.dataArray[position]} text={value.name} />
+                    <FlowView  ref ={this.state.dataArray[position]} text={value.name} onClick={()=>{
+                        console.log("onclick");
+                        console.log(value);
+                        console.log(value.name);
+                        console.log(this.state.dataArray);
+                        let item = this.state.dataArray[position];
+                        console.log(item);
+                        item.setSelected(true)
+                    }}/>
                 </View>
             );
         });
@@ -56,7 +64,9 @@ export default class KnowledgeTree extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexDirection: 'column',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'flex-start',
+        width: null,
     },
 });

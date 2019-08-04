@@ -29,6 +29,9 @@ yarn add react-native-swiper@nightly
 yarn add react-native-page-scrollview
 
 
+react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/com/anywaygobin/reading/src/main/res/
+
+
 react知识点：
 
 异步的三种方式：

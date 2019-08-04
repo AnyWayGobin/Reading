@@ -41,9 +41,9 @@ export default class WanAndroid extends Component {
 
     componentDidMount() {
         this.fetchData(category, pageNo);
-        this.listener = DeviceEventEmitter.addListener(EVENT_NAME, (category) => {
-            console.log("listener = " + category);
-            this.category = category;
+        this.listener = DeviceEventEmitter.addListener(EVENT_NAME, (newCategory) => {
+            console.log("listener = " + newCategory);
+            category = newCategory;
             pageNo = 0;
             this.fetchData(category, pageNo);
             this.setState({
@@ -61,6 +61,7 @@ export default class WanAndroid extends Component {
 
     fetchData(category, pageNo) {
         const requestUrl = "https://www.wanandroid.com/article/" + category + "/" + pageNo + "/json";
+        // console.log(requestUrl);
         fetch(requestUrl)
             .then((response) => {
                 return response.json();
