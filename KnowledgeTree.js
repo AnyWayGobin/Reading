@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import {Text, StyleSheet, View} from 'react-native';
+import {Text, StyleSheet, View, ScrollView} from 'react-native';
 import FlowView from './FlowLayout'
+import PropTypes from "prop-types";
 
 const REQUEST_URL = "https://www.wanandroid.com/tree/json";
 
@@ -10,6 +11,7 @@ export default class KnowledgeTree extends Component {
         super(props);
         this.state = {
             dataArray: [],
+            selectedState: []
         };
     }
 
@@ -28,6 +30,7 @@ export default class KnowledgeTree extends Component {
                 this.setState({
                     //复制数据源
                     dataArray: this.state.dataArray.concat(data),
+                    selectedState: new Array(data.length).fill(false)
                 });
                 data = null;
             })
@@ -36,28 +39,63 @@ export default class KnowledgeTree extends Component {
             });
     }
 
+    async change() {
+        for (let i = 0; i < this.state.selectedState.length; i++) {
+            console.log(i);
+            /*console.log(this.state.dataArray);
+            let item = this.refs[this.state.dataArray[i]];
+            console.log(item);
+            if (item) {
+                item.setSelected(this.state.selectedState[i]);
+            }*/
+        }
+    }
+    getSelectedPosition() {
+        let list = [];
+        this.state.selectedState.forEach((value, key) => {
+            if (value) {
+                list.push(key);
+            }
+        });
+        return list;
+    }
+    resetData() {
+        this.setState({
+            selectedState: new Array(this.state.dataArray.length).fill(false),
+        }, () => {
+            this.change();
+        })
+    }
+
 
     render() {
         let items = this.state.dataArray.map((value, position) => {
             return (
                 <View key={position}>
                     <FlowView  ref ={this.state.dataArray[position]} text={value.name} onClick={()=>{
-                        console.log("onclick");
-                        console.log(value);
-                        console.log(value.name);
-                        console.log(this.state.dataArray);
-                        let item = this.state.dataArray[position];
-                        console.log(item);
-                        item.setSelected(true)
+                        for (let i = this.state.selectedState.length - 1; i >= 0; i--) {
+                            if(i===position){
+                                continue;
+                            }
+                            if (this.state.selectedState[i] === true) {
+                                this.state.selectedState[i] = false;
+                                break;
+                            }
+                        }
+                        this.state.selectedState[position] = !this.state.selectedState[position];
+
+                        this.change();
                     }}/>
                 </View>
             );
         });
 
         return (
-            <View style={styles.container}>
-                {items}
-            </View>
+            <ScrollView>
+                <View style={styles.container}>
+                    {items}
+                </View>
+            </ScrollView>
         );
     }
 };
