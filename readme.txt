@@ -39,3 +39,5 @@ callback、promise、async+await
 
 react native和原生通信的三种方式：
 callback、promise、DeviceEventEmitter
+
+ref this.refs是什么东西？

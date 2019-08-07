@@ -39,15 +39,13 @@ export default class KnowledgeTree extends Component {
             });
     }
 
-    async change() {
+    change() {
         for (let i = 0; i < this.state.selectedState.length; i++) {
-            console.log(i);
-            /*console.log(this.state.dataArray);
-            let item = this.refs[this.state.dataArray[i]];
+            let item = this.state.dataArray[i];
             console.log(item);
             if (item) {
                 item.setSelected(this.state.selectedState[i]);
-            }*/
+            }
         }
     }
     getSelectedPosition() {
@@ -72,8 +70,8 @@ export default class KnowledgeTree extends Component {
         let items = this.state.dataArray.map((value, position) => {
             return (
                 <View key={position}>
-                    <FlowView  ref ={this.state.dataArray[position]} text={value.name} onClick={()=>{
-                        for (let i = this.state.selectedState.length - 1; i >= 0; i--) {
+                    <FlowView text={value.name} onClick={()=>{
+                        /*for (let i = this.state.selectedState.length - 1; i >= 0; i--) {
                             if(i===position){
                                 continue;
                             }
@@ -81,9 +79,14 @@ export default class KnowledgeTree extends Component {
                                 this.state.selectedState[i] = false;
                                 break;
                             }
+                        }*/
+                        for (let i = this.state.selectedState.length - 1; i >= 0; i--) {
+                            if (this.state.selectedState[i] === true) {
+                                this.state.selectedState[i] = false;
+                                break;
+                            }
                         }
                         this.state.selectedState[position] = !this.state.selectedState[position];
-
                         this.change();
                     }}/>
                 </View>

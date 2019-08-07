@@ -26,12 +26,12 @@ export default class FlowView extends Component {
         text: PropTypes.string,
         isSelected: PropTypes.bool,
         onClick: PropTypes.func,
-    }
+    };
     static defaultProps = {
         backgroundColors: ['#FFFFFF', '#266A99'],
         textColors: ['#666666', '#FFFFFF'],
         isSelected: false,
-    }
+    };
     constructor(props) {
         super(props);
 
