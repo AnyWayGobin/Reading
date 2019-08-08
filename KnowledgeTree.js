@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Text, StyleSheet, View, ScrollView} from 'react-native';
 import FlowView from './FlowLayout'
+import DetailKnowledge from './DetailKnowledge'
 import PropTypes from "prop-types";
 
 const REQUEST_URL = "https://www.wanandroid.com/tree/json";
@@ -83,6 +84,7 @@ export default class KnowledgeTree extends Component {
             return (
                 <FlowView ref ={this.state.secLevelDataArray[position].name} text={value.name} onClick={()=>{
                     console.log("secLevelItems");
+                    this.props.navigation.navigate("DetailKnowledge", {title: value.name, cid: value.id});
                 }}/>
             );
         });

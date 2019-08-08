@@ -13,6 +13,31 @@ import MyWeb from "./MyWeb";
 import ImagePreView from "./ImagePreView";
 import WanAndroid from "./WanAndroid";
 import KnowledgeTree from "./KnowledgeTree";
+import DetailKnowledge from "./DetailKnowledge";
+import HotMovie from "./HotMovie";
+import CommingMovie from "./CommingMovie";
+
+
+//-----------------------------主页（玩安卓）-----------------------------------
+
+const wanAndroidTabNavigator = createMaterialTopTabNavigator({
+        WanAndroid: WanAndroid,
+        KnowledgeTree: KnowledgeTree,
+    },
+    {
+        initialRouteName : "WanAndroid",
+    });
+
+const WanAndroidTabStack = createStackNavigator({
+    WanAndroidTab: {
+        screen: wanAndroidTabNavigator,
+        navigationOptions: {
+            header: null,
+        },
+    },
+    DetailKnowledge: DetailKnowledge,
+    MyWeb: MyWeb
+});
 
 //----------------------------发现（干货）------------------------------------
 
@@ -36,25 +61,27 @@ const FoundTabStack = createStackNavigator({
     ImagePreView: ImagePreView
 });
 
-//-----------------------------主页（玩安卓）-----------------------------------
+//----------------------------豆瓣------------------------------------
 
-const wanAndroidTabNavigator = createMaterialTopTabNavigator({
-        WanAndroid: WanAndroid,
-        KnowledgeTree: KnowledgeTree,
+const DouBanTabNavigator = createMaterialTopTabNavigator({
+        HotMovie: HotMovie,
+        CommingMovie: CommingMovie,
     },
     {
-        initialRouteName : "WanAndroid",
+        initialRouteName : "HotMovie",
     });
 
-const WanAndroidTabStack = createStackNavigator({
-    WanAndroidTab: {
-        screen: wanAndroidTabNavigator,
+const DouBanTabStack = createStackNavigator({
+    DouBanTab: {
+        screen: DouBanTabNavigator,
         navigationOptions: {
             header: null,
         },
     },
-    MyWeb: MyWeb
+    MyWeb: MyWeb,
 });
+
+//----------------------------底部TAB页------------------------------------
 
 const navigator = createBottomTabNavigator({
         WanAndroidTab: {
@@ -73,6 +100,12 @@ const navigator = createBottomTabNavigator({
                         style={[styles.icon, { tintColor: tintColor }]}
                     />
                 )*/
+            })
+        },
+        DouBanTab: {
+            screen:DouBanTabStack,
+            navigationOptions:() =>({
+                tabBarLabel:"豆瓣",
             })
         },
         RegisterLogin: RegisterLogin,
