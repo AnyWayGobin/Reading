@@ -87,7 +87,7 @@ class FlowLayout extends Component {
     static defaultProps = {
         style: {},
         dataValue: ["标签1", "标签2", "标签3标签4标签4", "标签4", "标签5", "标签5标签6", "标签7", "标签8", "标签9", "标签10标签8"],
-        multiselect: true,
+        multiselect: false,
     }
     constructor(props) {
         super(props);
@@ -99,6 +99,7 @@ class FlowLayout extends Component {
 
     }
     change() {
+        console.log("change");
         for (var i = 0; i < this.state.selectedState.length; i++) {
             let item = this.refs[this.props.dataValue[i]];
             if (item) {
