@@ -12,16 +12,21 @@ import {
 import PageScrollView from 'react-native-page-scrollview';
 import Swiper from 'react-native-swiper';
 
-const REQUEST_URL = "https://api-m.mtime.cn/Showtime/LocationMovies.api?locationId=561";
+const REQUEST_URL = "https://api-m.mtime.cn/movie/detail.api?locationId=561&movieId=";
 
 /**
- * 豆瓣电影热映榜
+ * 电影详情
  */
-export default class HotMovie extends Component {
+export default class MovieDetail extends Component {
 
-    static navigationOptions = {
-        title: "热映榜"
-    };
+    static navigationOptions = ({ navigation }) => ({
+
+        title: `${navigation.state.params.item.t}`,
+        headerStyle: {
+            backgroundColor: '#549cf8',
+        },
+        headerTintColor: '#fff',
+    });
 
     constructor(props) {
         super(props);
@@ -41,7 +46,10 @@ export default class HotMovie extends Component {
     }
 
     fetchData() {
-        fetch(REQUEST_URL)
+        const movieId = this.props.getParam('item').movieId;
+        const req_url = REQUEST_URL + movieId;
+        console.log(req_url);
+        fetch(req_url)
             .then((response) => {
                 return response.json();
             })
@@ -119,7 +127,7 @@ export default class HotMovie extends Component {
     }
 
     _clickItem = (item) => {
-        this.props.navigation.navigate("MovieDetail", {item: item});
+        // this.props.navigation.navigate("MyWeb", {url: item.link, desc: item.title});
     };
 
     _renderFooter() {

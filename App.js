@@ -16,6 +16,7 @@ import KnowledgeTree from "./KnowledgeTree";
 import DetailKnowledge from "./DetailKnowledge";
 import HotMovie from "./HotMovie";
 import CommingMovie from "./CommingMovie";
+import MovieDetail from "./MovieDetail";
 
 
 //-----------------------------主页（玩安卓）-----------------------------------
@@ -78,7 +79,7 @@ const DouBanTabStack = createStackNavigator({
             header: null,
         },
     },
-    MyWeb: MyWeb,
+    MovieDetail: MovieDetail,
 });
 
 //----------------------------底部TAB页------------------------------------

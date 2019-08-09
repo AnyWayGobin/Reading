@@ -90,7 +90,7 @@ export default class Welfare extends Component {
             <View style={styles.container}>
                 <ActivityIndicator
                     animating={true}
-                    color='blue'
+                    color='skyblue'
                     size="large"
                 />
             </View>

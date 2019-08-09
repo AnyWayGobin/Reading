@@ -68,11 +68,9 @@ export default class WanAndroid extends Component {
             })
             .then((responseData) => {
                 let data = responseData.data.datas;
-                // console.log(data);
                 /**
                  * 这里改变dataArray的值是因为防止下拉刷新数据的时候，屏幕闪烁
                  */
-                console.log(this.state.isRefreshing);
                 if (this.state.isRefreshing) {
                     this.setState({
                         dataArray:[]
@@ -121,7 +119,7 @@ export default class WanAndroid extends Component {
             <View style={styles.loading}>
                 <ActivityIndicator
                     animating={true}
-                    color='blue'
+                    color='skyblue'
                     size="large"
                 />
             </View>
@@ -156,7 +154,7 @@ export default class WanAndroid extends Component {
             return (
                 <View style={styles.footer}>
                     <ActivityIndicator animating={true}
-                                       color='blue'
+                                       color='skyblue'
                                        size="small"/>
                     <Text>正在加载更多数据...</Text>
                 </View>

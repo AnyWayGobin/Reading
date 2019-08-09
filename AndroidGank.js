@@ -135,7 +135,7 @@ export default class AndroidGank extends Component {
             <View style={styles.loading}>
                 <ActivityIndicator
                     animating={true}
-                    color='blue'
+                    color='skyblue'
                     size="large"
                 />
             </View>
@@ -205,7 +205,7 @@ export default class AndroidGank extends Component {
             return (
                 <View style={styles.footer}>
                     <ActivityIndicator animating={true}
-                                       color='blue'
+                                       color='skyblue'
                                        size="small"/>
                     <Text>正在加载更多数据...</Text>
                 </View>
