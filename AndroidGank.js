@@ -151,11 +151,11 @@ export default class AndroidGank extends Component {
             return (
                 <Card containerStyle={styles.card}>
                     <View style={styles.container}>
-                        <View style={styles.content}>
+                        <View style={{margin: 5}}>
                             <Text onPress={this._clickItem.bind(this, item)}>{item.desc}</Text>
                         </View>
                         <View style={styles.authorTime}>
-                            <Text style={styles.author}>作者：{item.who}</Text>
+                            <Text style={styles.author}>{item.who}.{item.type}</Text>
                             <Text style={styles.time}>{item.publishedAt.substring(0, item.publishedAt.indexOf("T"))}</Text>
                         </View>
                     </View>
@@ -168,12 +168,12 @@ export default class AndroidGank extends Component {
         return (
             <Card containerStyle={styles.card}>
                 <View style={styles.container}>
-                    <View style={styles.content}>
+                    <View style={{margin: 5}}>
                         <Text onPress={this._clickItem.bind(this, item)}>{item.desc}</Text>
                         <Image source={{uri: item.images[0]}} style={styles.image}/>
                     </View>
                     <View style={styles.authorTime}>
-                        <Text style={styles.author}>作者：{item.who}</Text>
+                        <Text style={styles.author}>{item.who}.{item.type}</Text>
                         <Text style={styles.time}>{item.publishedAt.substring(0, item.publishedAt.indexOf("T"))}</Text>
                     </View>
                 </View>
@@ -270,25 +270,19 @@ const styles = StyleSheet.create({
         height: 80,
         margin: 5
     },
-    content: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        margin: 5,
-    },
     authorTime: {
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
     author: {
         margin: 5,
-        color: 'red',
-        fontSize: 14,
+        color: 'gray',
+        fontSize: 10,
     },
     time: {
         margin: 5,
         color: 'gray',
-        fontSize: 14,
+        fontSize: 10,
     },
     footer: {
         flexDirection: 'row',

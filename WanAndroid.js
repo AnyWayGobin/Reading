@@ -61,7 +61,6 @@ export default class WanAndroid extends Component {
 
     fetchData(category, pageNo) {
         const requestUrl = "https://www.wanandroid.com/article/" + category + "/" + pageNo + "/json";
-        // console.log(requestUrl);
         fetch(requestUrl)
             .then((response) => {
                 return response.json();
@@ -129,11 +128,16 @@ export default class WanAndroid extends Component {
     renderData({item}) {
         return (
             <View style={styles.container}>
-                <View style={styles.content}>
-                    <Text onPress={this._clickItem.bind(this, item)}>{item.title}</Text>
+                <View style={styles.authorTime}>
+                    <Text></Text>
+                    <Text style={{margin: 5}}>{item.chapterName}</Text>
                 </View>
                 <View style={styles.authorTime}>
-                    <Text style={styles.author}>作者：{item.chapterName}</Text>
+                    <Text style={{margin: 5}} onPress={this._clickItem.bind(this, item)}>{item.title}</Text>
+                </View>
+                <View style={styles.authorTime}>
+                    <Text style={styles.author}>{item.niceDate}.{item.author}</Text>
+                    <Image source={require('./image/ic_uncollect.png')} style={{width:40,height:40}}/>
                 </View>
             </View>
         );
@@ -222,20 +226,18 @@ class FlatListHeaderComponent extends Component {
                 </Swiper>
 
                 <View style={{flex:1, flexDirection:'row', marginTop:15, marginLeft:5, marginBottom:15}}>
-                    <Text style={this.state.selected ? {color:'red'} : {color:'gray'}} onPress={this._clickText1.bind(this)}>最新博文</Text>
+                    <Text style={this.state.selected ? {color:'skyblue'} : {color:'gray'}} onPress={this._clickText1.bind(this)}>最新博文</Text>
                     <Text > | </Text>
-                    <Text style={this.state.unSelected ? {color:'red'} : {color:'gray'}} onPress={this._clickText2.bind(this)}>最新项目</Text>
+                    <Text style={this.state.unSelected ? {color:'skyblue'} : {color:'gray'}} onPress={this._clickText2.bind(this)}>最新项目</Text>
                 </View>
             </View>
         );
     }
 
     renderImage() {
-        console.log("renderImage");
         const imgsArray = [];
         let images = this.state.bannerDataArray;
         images.map(function (item) {
-            console.log(item);
             imgsArray.push(
                 <View style={styles.slide}>
                     <Image source={item} style={styles.image}/>
@@ -308,6 +310,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
+        // justifyContent: 'flex-start',
+        // alignItems: 'flex-start'
     },
     loading: {
         flex: 1,
@@ -319,25 +323,14 @@ const styles = StyleSheet.create({
         width: null,
         height: 200,
     },
-    content: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        margin: 5,
-    },
     authorTime: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     author: {
         margin: 5,
-        color: 'red',
-        fontSize: 14,
-    },
-    time: {
-        margin: 5,
         color: 'gray',
-        fontSize: 14,
+        fontSize: 10,
     },
     footer: {
         flexDirection: 'row',

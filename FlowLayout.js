@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     corner: {
         borderColor: '#D0D0D0',
         borderWidth: 1 / PixelRatio.get(),
-        borderRadius: 5,
+        borderRadius: 15,
         height: 35,
         justifyContent: 'center',
         alignItems: 'center',
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     text: {
-        fontSize: 16,
+        fontSize: 12,
         textAlign: 'center',
     },
     container: {

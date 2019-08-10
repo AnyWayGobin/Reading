@@ -8,6 +8,10 @@ const REQUEST_URL = "https://www.wanandroid.com/tree/json";
 
 export default class KnowledgeTree extends Component {
 
+    static navigationOptions = {
+        title: "知识体系"
+    };
+
     static propTypes = {
         dataArray: PropTypes.array,
     };
@@ -83,7 +87,6 @@ export default class KnowledgeTree extends Component {
         let secLevelItems = this.state.secLevelDataArray.map((value, position) => {
             return (
                 <FlowView ref ={this.state.secLevelDataArray[position].name} text={value.name} onClick={()=>{
-                    console.log("secLevelItems");
                     this.props.navigation.navigate("DetailKnowledge", {title: value.name, cid: value.id});
                 }}/>
             );
@@ -92,11 +95,11 @@ export default class KnowledgeTree extends Component {
         return (
             <ScrollView>
                 <View style={styles.container}>
-                    <Text>一级分类</Text>
+                    <Text style={{fontSize: 18, margin: 10, fontWeight: "bold"}}>一级分类</Text>
                     <View style={styles.firstLevel}>
                         {items}
                     </View>
-                    <Text>二级分类</Text>
+                    <Text  style={{fontSize: 18, margin: 10, fontWeight: "bold"}}>二级分类</Text>
                     <View style={styles.firstLevel}>
                         {secLevelItems}
                     </View>
@@ -117,5 +120,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         alignItems: 'flex-start',
         width: null,
+        marginLeft: 18,
+        marginBottom: 10
     },
 });
