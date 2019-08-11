@@ -118,7 +118,7 @@ export default class WanAndroid extends Component {
             <View style={styles.loading}>
                 <ActivityIndicator
                     animating={true}
-                    color='skyblue'
+                    color='#549cf8'
                     size="large"
                 />
             </View>
@@ -137,7 +137,9 @@ export default class WanAndroid extends Component {
                 </View>
                 <View style={styles.authorTime}>
                     <Text style={styles.author}>{item.niceDate}.{item.author}</Text>
-                    <Image source={require('./image/ic_uncollect.png')} style={{width:40,height:40}}/>
+                    <TouchableOpacity onPress={this._clickCollect.bind(this, item)}>
+                        <Image source={require('./image/ic_uncollect.png')} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -145,6 +147,11 @@ export default class WanAndroid extends Component {
 
     _clickItem = (item) => {
         this.props.navigation.navigate("MyWeb", {url: item.link, desc: item.title});
+    };
+
+    _clickCollect = (item) => {
+        console.log("registerLogin");
+        this.props.navigation.navigate("RegisterLogin", {isHasTitle: true});
     };
 
     _renderFooter() {
@@ -158,7 +165,7 @@ export default class WanAndroid extends Component {
             return (
                 <View style={styles.footer}>
                     <ActivityIndicator animating={true}
-                                       color='skyblue'
+                                       color='#549cf8'
                                        size="small"/>
                     <Text>正在加载更多数据...</Text>
                 </View>

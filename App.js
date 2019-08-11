@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 
-import RegisterLogin from './RegisterLogin'
 import {
     createBottomTabNavigator,
     createAppContainer, createMaterialTopTabNavigator, createStackNavigator,
@@ -17,6 +16,8 @@ import DetailKnowledge from "./DetailKnowledge";
 import HotMovie from "./HotMovie";
 import CommingMovie from "./CommingMovie";
 import MovieDetail from "./MovieDetail";
+import RegisterLogin from './RegisterLogin';
+import Duanzi from './Duanzi';
 
 
 //-----------------------------主页（玩安卓）-----------------------------------
@@ -37,7 +38,8 @@ const WanAndroidTabStack = createStackNavigator({
         },
     },
     DetailKnowledge: DetailKnowledge,
-    MyWeb: MyWeb
+    MyWeb: MyWeb,
+    RegisterLogin: RegisterLogin
 });
 
 //----------------------------发现（干货）------------------------------------
@@ -82,18 +84,19 @@ const DouBanTabStack = createStackNavigator({
     MovieDetail: MovieDetail,
 });
 
+
 //----------------------------底部TAB页------------------------------------
 
 const navigator = createBottomTabNavigator({
         WanAndroidTab: {
             screen:WanAndroidTabStack,
-            navigationOptions:() =>({
+            navigationOptions:{
                 tabBarLabel:"主页",
-            })
+            }
         },
         FoundTab: {
             screen:FoundTabStack,
-            navigationOptions:() =>({
+            navigationOptions: {
                 tabBarLabel:"发现",
                 /*tabBarIcon: ({ tintColor }) => (
                     <Image
@@ -101,15 +104,15 @@ const navigator = createBottomTabNavigator({
                         style={[styles.icon, { tintColor: tintColor }]}
                     />
                 )*/
-            })
+            }
         },
         DouBanTab: {
             screen:DouBanTabStack,
-            navigationOptions:() =>({
+            navigationOptions:{
                 tabBarLabel:"豆瓣",
-            })
+            }
         },
-        RegisterLogin: RegisterLogin,
+        Duanzi: Duanzi,
     });
 
 

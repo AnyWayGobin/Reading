@@ -86,7 +86,7 @@ export default class KnowledgeTree extends Component {
 
         let secLevelItems = this.state.secLevelDataArray.map((value, position) => {
             return (
-                <FlowView ref ={this.state.secLevelDataArray[position].name} text={value.name} onClick={()=>{
+                <FlowView ref ={this.state.secLevelDataArray[position].name} text={value.name} isSelected={false} onClick={()=>{
                     this.props.navigation.navigate("DetailKnowledge", {title: value.name, cid: value.id});
                 }}/>
             );

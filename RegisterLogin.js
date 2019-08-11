@@ -16,15 +16,13 @@ const REQUEST_LOGIN = "https://www.wanandroid.com/user/login";
 
 export default class RegisterLogin extends Component {
 
-    // static navigationOptions = ({ navigation }) => {
-    //     return {
-    //         title: navigation.getParam('otherParam', 'A Nested Details Screen'),
-    //     };
-    // };
-
-    static navigationOptions = {
-      title: "登录注册"
-    };
+    static navigationOptions = () => ({
+        title: '登录注册',
+        headerStyle: {
+            backgroundColor: '#549cf8',
+        },
+        headerTintColor: '#fff',
+    });
 
     constructor(props) {
         super(props);

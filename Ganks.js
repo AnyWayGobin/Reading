@@ -123,7 +123,7 @@ export default class Ganks extends Component {
             <View style={styles.loading}>
                 <ActivityIndicator
                     animating={true}
-                    color='skyblue'
+                    color='#549cf8'
                     size="large"
                 />
             </View>
@@ -178,7 +178,7 @@ export default class Ganks extends Component {
             return (
                 <View style={styles.footer}>
                     <ActivityIndicator animating={true}
-                                       color='skyblue'
+                                       color='#549cf8'
                                        size="small"/>
                     <Text>正在加载更多数据...</Text>
                 </View>
@@ -208,7 +208,7 @@ export default class Ganks extends Component {
 class ItemDivideComponent extends Component {
     render() {
         return (
-            <View style={{height: 1, backgroundColor: 'skyblue'}}/>
+            <View style={{height: 1, backgroundColor: '#549cf8'}}/>
         );
     }
 }

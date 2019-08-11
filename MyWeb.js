@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Text} from "react-native";
 import { WebView } from 'react-native-webview';
 
-export default class WebComponent extends Component {
+export default class MyWeb extends Component {
 
     static navigationOptions = ({ navigation }) => ({
 

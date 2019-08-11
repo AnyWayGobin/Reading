@@ -28,7 +28,7 @@ export default class FlowView extends Component {
         onClick: PropTypes.func,
     };
     static defaultProps = {
-        backgroundColors: ['#FFFFFF', '#266A99'],
+        backgroundColors: ['#FFFFFF', '#549cf8'],
         textColors: ['#666666', '#FFFFFF'],
         isSelected: false,
     };
