@@ -7,7 +7,7 @@ import {
     View,
     ActivityIndicator,
     ScrollView,
-    TouchableOpacity, DeviceEventEmitter
+    TouchableOpacity, DeviceEventEmitter, ToastAndroid
 } from "react-native";
 import StorageOpt from "./StorageOpt"
 import Swiper from 'react-native-swiper';
@@ -84,7 +84,7 @@ export default class WanAndroid extends Component {
                 }
 
                 let foot = 0;
-                if (data.length === 0 || pageNo === 5) {
+                if (data.length === 0) {
                     foot = 1;
                 }
                 this.setState({
@@ -161,10 +161,56 @@ export default class WanAndroid extends Component {
            if (result === null || result === "") {
                this.props.navigation.navigate("RegisterLogin");
            } else {
-
+               if (item.collect) {
+                   const unCollectUrl = "https://www.wanandroid.com/lg/uncollect_originId/" + item.id + "/json";
+                   this.collectFetchData(unCollectUrl, "collect", item);
+               } else {
+                   const collectUrl = "https://www.wanandroid.com/lg/collect/" + item.id + "/json";
+                   this.collectFetchData(collectUrl, "", item);
+               }
+               // this.props.navigation.navigate("Collect");
            }
         });
     };
+
+    collectFetchData(url, type, item) {
+        fetch(url, {method : 'POST', headers: {'Cookie': cookie}})
+            .then((response) => {
+                return response.json();
+            })
+            .then((responseData) => {
+                if (responseData.errorCode === 0) {//执行成功
+                    this.modifyDataArray(this.state.dataArray, item);
+                    if (type === "collect") {
+                        ToastAndroid.show("已取消收藏", ToastAndroid.SHORT);
+                    } else {
+                        ToastAndroid.show("收藏成功", ToastAndroid.SHORT);
+                    }
+                } else {
+                    if (type === "collect") {
+                        ToastAndroid.show("取消收藏失败", ToastAndroid.SHORT);
+                    } else {
+                        ToastAndroid.show("收藏失败", ToastAndroid.SHORT);
+                    }
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+    }
+
+    modifyDataArray(_arr, _obj) {
+        let length = _arr.length;
+        for (let i = 0; i < length; i++) {
+            if (_arr[i].id === _obj.id) {
+                this.state.dataArray[i].collect = !this.state.dataArray[i].collect;
+                break;
+            }
+        }
+        this.setState({
+            dataArray: this.state.dataArray
+        });
+    }
 
     _renderFooter() {
         if (this.state.showFoot === 1) {
@@ -192,7 +238,6 @@ export default class WanAndroid extends Component {
     }
 
     _onEndReached() {
-        console.log("_onEndReached");
         //如果是正在加载中或没有更多数据了，则返回
         if (this.state.showFoot !== 0) {
             return;
@@ -312,7 +357,7 @@ class FlatListHeaderComponent extends Component {
 class ItemDivideComponent extends Component {
     render() {
         return (
-            <View style={{height: 1, backgroundColor: 'skyblue'}}/>
+            <View style={{height: 1, backgroundColor: '#549cf8'}}/>
         );
     }
 }
@@ -368,15 +413,5 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         color: '#999999',
         fontSize: 14
-    },
-    card: {
-        borderRadius: 2,
-        borderWidth: 0,
-        borderColor:'#A9A9A9',
-        shadowColor:'#808080',
-        // shadowOffset:{h:10,w:10},
-        shadowRadius:3,
-        shadowOpacity: 0.8,
-        padding: -10
     },
 });
