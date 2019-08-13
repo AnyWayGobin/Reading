@@ -37,6 +37,7 @@ export default class Collect extends Component {
     componentWillMount() {
         StorageOpt.loaddata("cookie", (result) => {
             cookie = result;
+            pageNo = 0;
             this.fetchData(pageNo);
         });
     }
@@ -119,7 +120,7 @@ export default class Collect extends Component {
                 </View>
                 <View style={styles.authorTime}>
                     <Text style={styles.author}>{item.niceDate}.{item.author}</Text>
-                    <TouchableOpacity onPress={this._clickUnCollect.bind(this, item)}>
+                    <TouchableOpacity onPress={this.unCollectFetchData.bind(this, item)}>
                         <Image source={require('./image/ic_collected.png')} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
                     </TouchableOpacity>
                 </View>
@@ -131,35 +132,28 @@ export default class Collect extends Component {
         this.props.navigation.navigate("MyWeb", {url: item.link, desc: item.title});
     };
 
-    async _clickUnCollect (item) {
-        let data = await this.removeArray(this.state.dataArray, item);
-        this.setState({
-            dataArray: data
-        })
-    };
-
-    collectFetchData(item) {
+    unCollectFetchData(item) {
         const url = "https://www.wanandroid.com/lg/uncollect/" + item.id + "/json";
         let formData = new FormData();
-        formData.append('username', this.state.username);
-        fetch(url, {method : 'POST', headers: {'Cookie': cookie}})
+        if (item.originId === null || item.originId === "") {
+            formData.append('originId', "-1");
+        } else {
+            formData.append('originId', item.originId);
+        }
+        fetch(url, {method : 'POST', headers: {'Cookie': cookie}, body: formData})
             .then((response) => {
                 return response.json();
             })
             .then((responseData) => {
                 if (responseData.errorCode === 0) {//执行成功
-                    this.modifyDataArray(this.state.dataArray, item);
-                    if (type === "collect") {
-                        ToastAndroid.show("已取消收藏", ToastAndroid.SHORT);
-                    } else {
-                        ToastAndroid.show("收藏成功", ToastAndroid.SHORT);
-                    }
+                    ToastAndroid.show("已取消收藏", ToastAndroid.SHORT);
+                    let data = this.removeArray(this.state.dataArray, item);
+                    this.setState({
+                        dataArray: data
+                    });
+                    data = null;
                 } else {
-                    if (type === "collect") {
-                        ToastAndroid.show("取消收藏失败", ToastAndroid.SHORT);
-                    } else {
-                        ToastAndroid.show("收藏失败", ToastAndroid.SHORT);
-                    }
+                    ToastAndroid.show("取消收藏失败", ToastAndroid.SHORT);
                 }
             })
             .catch((error) => {
@@ -232,8 +226,6 @@ export default class Collect extends Component {
                 break;
             }
         }
-        console.log(';;;;;;--- rrrr' + _arr);
-        console.log(this.state.dataArray);
         return _arr;
     }
 }

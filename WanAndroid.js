@@ -185,6 +185,7 @@ export default class WanAndroid extends Component {
                         ToastAndroid.show("已取消收藏", ToastAndroid.SHORT);
                     } else {
                         ToastAndroid.show("收藏成功", ToastAndroid.SHORT);
+                        this.props.navigation.navigate("Collect");
                     }
                 } else {
                     if (type === "collect") {
