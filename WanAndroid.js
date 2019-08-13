@@ -9,13 +9,15 @@ import {
     ScrollView,
     TouchableOpacity, DeviceEventEmitter
 } from "react-native";
-import PageScrollView from 'react-native-page-scrollview';
+import StorageOpt from "./StorageOpt"
 import Swiper from 'react-native-swiper';
 
 const EVENT_NAME = "notifyChangeData";
 let category = "list";
 let pageNo = 0;//当前第几页
 const REQUEST_BANNER_URL = "https://www.wanandroid.com/banner/json";
+
+let cookie = "";
 
 /**
  * 玩安卓
@@ -40,7 +42,11 @@ export default class WanAndroid extends Component {
     }
 
     componentDidMount() {
-        this.fetchData(category, pageNo);
+        StorageOpt.loaddata("cookie", (result) => {
+            cookie = result;
+            console.log("componentWillMount=" + result);
+            this.fetchData(category, pageNo);
+        });
         this.listener = DeviceEventEmitter.addListener(EVENT_NAME, (newCategory) => {
             console.log("listener = " + newCategory);
             category = newCategory;
@@ -60,8 +66,9 @@ export default class WanAndroid extends Component {
     }
 
     fetchData(category, pageNo) {
+        console.log("fetchData=" + cookie);
         const requestUrl = "https://www.wanandroid.com/article/" + category + "/" + pageNo + "/json";
-        fetch(requestUrl)
+        fetch(requestUrl, {method : 'GET', headers: {'Cookie': cookie}})
             .then((response) => {
                 return response.json();
             })
@@ -138,7 +145,7 @@ export default class WanAndroid extends Component {
                 <View style={styles.authorTime}>
                     <Text style={styles.author}>{item.niceDate}.{item.author}</Text>
                     <TouchableOpacity onPress={this._clickCollect.bind(this, item)}>
-                        <Image source={require('./image/ic_uncollect.png')} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
+                        <Image source={item.collect ? require('./image/ic_collected.png') : require('./image/ic_uncollect.png')} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -150,8 +157,13 @@ export default class WanAndroid extends Component {
     };
 
     _clickCollect = (item) => {
-        console.log("registerLogin");
-        this.props.navigation.navigate("RegisterLogin", {isHasTitle: true});
+        StorageOpt.loaddata("cookie", (result) => {
+           if (result === null || result === "") {
+               this.props.navigation.navigate("RegisterLogin");
+           } else {
+
+           }
+        });
     };
 
     _renderFooter() {

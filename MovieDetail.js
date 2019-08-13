@@ -9,11 +9,10 @@ import {
     ScrollView,
     TouchableOpacity, DeviceEventEmitter
 } from "react-native";
-import PageScrollView from 'react-native-page-scrollview';
-import Swiper from 'react-native-swiper';
 
 const REQUEST_URL = "https://api-m.mtime.cn/movie/detail.api?locationId=561&movieId=";
 
+let movieId = -1;
 /**
  * 电影详情
  */
@@ -23,7 +22,7 @@ export default class MovieDetail extends Component {
 
         title: `${navigation.state.params.item.t}`,
         headerStyle: {
-            backgroundColor: '#549cf8',
+            backgroundColor: 'transparent',
         },
         headerTintColor: '#fff',
     });
@@ -46,7 +45,6 @@ export default class MovieDetail extends Component {
     }
 
     fetchData() {
-        const movieId = this.props.getParam('item').movieId;
         const req_url = REQUEST_URL + movieId;
         console.log(req_url);
         fetch(req_url)
@@ -80,20 +78,13 @@ export default class MovieDetail extends Component {
     }
 
     render() {
+        const { navigation } = this.props;
+        movieId = navigation.getParam('item').movieId;
         if (this.state.isLoading) {
             return this.renderLoadingView();
         }
         return (
-            <FlatList
-                data={this.state.dataArray}
-                renderItem={this.renderData.bind(this)}
-                ListFooterComponent={this._renderFooter.bind(this)}
-                onEndReached={this._onEndReached.bind(this)}
-                onRefresh={this._onRefresh.bind(this)}
-                refreshing={this.state.isRefreshing}
-                ItemSeparatorComponent={ItemDivideComponent}
-                onEndReachedThreshold={0.1}
-                keyExtractor={item => item.id} />
+            <Text/>
         );
     }
 

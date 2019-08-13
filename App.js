@@ -18,6 +18,7 @@ import CommingMovie from "./CommingMovie";
 import MovieDetail from "./MovieDetail";
 import RegisterLogin from './RegisterLogin';
 import Duanzi from './Duanzi';
+import Collect from './Collect';
 
 
 //-----------------------------主页（玩安卓）-----------------------------------
@@ -38,8 +39,7 @@ const WanAndroidTabStack = createStackNavigator({
         },
     },
     DetailKnowledge: DetailKnowledge,
-    MyWeb: MyWeb,
-    RegisterLogin: RegisterLogin
+    MyWeb: MyWeb
 });
 
 //----------------------------发现（干货）------------------------------------
@@ -87,7 +87,7 @@ const DouBanTabStack = createStackNavigator({
 
 //----------------------------底部TAB页------------------------------------
 
-const navigator = createBottomTabNavigator({
+const bottomNavigator = createBottomTabNavigator({
         WanAndroidTab: {
             screen:WanAndroidTabStack,
             navigationOptions:{
@@ -115,8 +115,19 @@ const navigator = createBottomTabNavigator({
         Duanzi: Duanzi,
     });
 
+const RootStack = createStackNavigator({
+    BottomNavigator: {
+        screen: bottomNavigator,
+        navigationOptions: {
+            header: null,
+        },
+    },
+    RegisterLogin: RegisterLogin,
+    Collect: Collect
+});
 
-const AppContainer = createAppContainer(navigator);
+
+const AppContainer = createAppContainer(RootStack);
 
 export default class App extends React.Component {
     render() {

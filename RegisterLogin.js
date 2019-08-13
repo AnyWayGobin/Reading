@@ -41,7 +41,6 @@ export default class RegisterLogin extends Component {
     };
 
     _onLoginPress = () => {
-        console.log('username=' + this.state.username)
         if ("" === this.state.username) {
             ToastAndroid.show("请输入用户名", ToastAndroid.LONG);
             console.log('username=' + this.username);
@@ -49,14 +48,12 @@ export default class RegisterLogin extends Component {
         }
         if ("" === this.state.password) {
             ToastAndroid.show("请输入密码", ToastAndroid.LONG);
-            console.log('password=' + this.password);
             return;
         }
         this.fetchLogin();
     };
 
     _onRegisterPress = () => {
-        console.log('username=' + this.state.username)
         if ("" === this.state.username) {
             ToastAndroid.show("请输入用户名", ToastAndroid.LONG);
             console.log('username=' + this.username);
@@ -64,7 +61,6 @@ export default class RegisterLogin extends Component {
         }
         if ("" === this.state.password) {
             ToastAndroid.show("请输入密码", ToastAndroid.LONG);
-            console.log('password=' + this.password);
             return;
         }
         this.fetchRegister();
@@ -105,44 +101,30 @@ export default class RegisterLogin extends Component {
     }
 
     fetchLogin() {
-        console.log("request data username=" + this.state.username + " password=" + this.state.password);
         let formData = new FormData();
         formData.append('username', this.state.username);
         formData.append('password', this.state.password);
-        console.log(formData);
 
         const request = new Request(REQUEST_LOGIN, {method: 'POST', body: formData});
         fetch(request)
             .then(response => {
-                console.log(response.status);
                 if (response.status === 200) {
-                    console.log(response);
                     const cookie = response.headers.map['set-cookie'];
-                    StorageOpt.save("cookie",cookie,null);
+                    StorageOpt.save("cookie", cookie,null);
                     return response.json();
                 }
             }).then(result => {
-            console.log(result);
-            if (result.errorCode === -1) {
-                ToastAndroid.show(result.errorMsg, ToastAndroid.LONG);
-            } else if (result.errorCode === 0) {//登录成功
-                this.setIsLogin();
-                this.props.navigation.navigate("Collect")
-            }
+                    if (result.errorCode === -1) {
+                        ToastAndroid.show(result.errorMsg, ToastAndroid.LONG);
+                    } else if (result.errorCode === 0) {//登录成功
+                        this.props.navigation.navigate("Collect")
+                    }
         })
             .catch((error) => {
                 console.log(error)
             })
     }
 
-    async setIsLogin() {
-        try {
-            const content  = await NativeModules.CustomModule.setIsLogin(true);
-            console.log(content);
-        }catch (e) {
-            console.error(e);
-        }
-    }
 
     render() {
 
@@ -190,7 +172,7 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: 'center',
-        backgroundColor: 'skyblue',
+        backgroundColor: '#549cf8',
         padding: 10,
         margin: 20,
         borderRadius: 5

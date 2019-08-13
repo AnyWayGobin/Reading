@@ -13,7 +13,11 @@ const REQUEST_COLLECT_LIST = "https://www.wanandroid.com/lg/collect/list/0/json"
 export default class Collect extends Component {
 
     static navigationOptions = {
-        title: "收藏列表"
+        title: "收藏列表",
+        headerStyle: {
+            backgroundColor: '#549cf8',
+        },
+        headerTintColor: '#fff',
     };
 
     constructor(props) {
@@ -25,8 +29,9 @@ export default class Collect extends Component {
 
     componentWillMount() {
         StorageOpt.loaddata("cookie", (result) => {
-            const request = new Request(REQUEST_COLLECT_LIST, {method: 'GET', headers:{Cookie: result}});
-            console.log("request headers = " + request.headers.get("Cookie"));
+            console.log(result);
+            const request = new Request(REQUEST_COLLECT_LIST, {method: 'GET', headers: {'Cookie': result}});
+            // console.log("request headers = " + request.headers.get("Cookie"));
             fetch(request)
                 .then((response) => {
                     console.log(response);
@@ -41,28 +46,8 @@ export default class Collect extends Component {
                 .catch((error) => {
                     console.log(error)
                 });
-            this.setState({headers:{Cookie: result}});
+            // this.setState({headers:{Cookie: result}});
         });
-        console.log("componentWillMount");
-        /*StorageOpt.loaddata("cookie", (result) => {
-            console.log(result);
-            this.setState({headers:{Cookie: result}});
-        });
-        console.log("componentWillMount");
-        return fetch(REQUEST_COLLECT_LIST, this.state.header)
-            .then((response) => {
-                console.log(response);
-                return response.json();
-            })
-            .then((result) => {
-                this.setState({
-                    isLoading: false,
-                });
-                console.log(result);
-            })
-            .catch((error) => {
-                console.log(error)
-            })*/
     }
 
     render() {

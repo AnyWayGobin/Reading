@@ -107,8 +107,11 @@ export default class HotMovie extends Component {
                 <View style={styles.container}>
                     <Image source={{uri: item.img}} style={styles.image}/>
                     <View style={styles.content}>
-                        <Text>{item.t}</Text>
-                        <Text>导演：{item.dN}</Text>
+                        <Text style={{fontWeight: "bold", fontSize: 16}}>{item.t}</Text>
+                        <View style={{flexDirection:'row'}}>
+                            <Text style={{textDecorationLine:'underline', textDecorationColor:'red', textDecorationStyle:'solid'}}>导演</Text>
+                            <Text>：{item.dN}</Text>
+                        </View>
                         <Text>主演：{item.actors}</Text>
                         <Text>类型：{item.movieType}</Text>
                         <Text>评分：{item.r}</Text>
@@ -168,7 +171,7 @@ export default class HotMovie extends Component {
 class ItemDivideComponent extends Component {
     render() {
         return (
-            <View style={{marginLeft: 120, height: 1, backgroundColor: '#549cf8'}}/>
+            <View style={{marginLeft: 106, height: 1, backgroundColor: '#549cf8'}}/>
         );
     }
 }
@@ -186,16 +189,16 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     image: {
-        width: 120,
-        height: 160,
-        marginTop: 6,
-        marginBottom: 6
+        width: 100,
+        height: 140,
+        margin: 6,
     },
     content: {
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        margin: 5,
+        marginTop: 20,
+        marginLeft: 5
     },
     footer: {
         flexDirection: 'row',
