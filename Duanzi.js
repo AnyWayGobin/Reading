@@ -109,10 +109,10 @@ export default class Duanzi extends Component {
         return (
             <View style={styles.container}>
                 <View>
-                    <Image source={{uri: item.user.medium}} style={styles.image}/>
+                    <Image source={{uri: item.user != null ? item.user.medium : ""}} style={styles.image}/>
                 </View>
                 <View style={styles.content}>
-                    <Text style={styles.author}>{item.user.login}</Text>
+                    <Text style={styles.author}>{item.user != null ? item.user.login : "无名"}</Text>
                     <Text style={styles.authorTime}>{moment(item.published_at * 1000).format('YYYY-MM-DD HH:mm:ss')}</Text>
                     <Text style={{margin: 5}}>{item.content}</Text>
                 </View>

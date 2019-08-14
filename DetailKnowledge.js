@@ -2,10 +2,12 @@ import React, {Component} from 'react';
 
 
 import MyWeb from "./MyWeb";
-import {ActivityIndicator, FlatList, Image, StyleSheet, Text, View} from "react-native";
+import {ActivityIndicator, FlatList, Image, StyleSheet, Text, ToastAndroid, TouchableOpacity, View} from "react-native";
+import StorageOpt from "./StorageOpt";
 
 let pageNo = 0;//当前第几页
 let cId = -1;
+let cookie = "";
 
 export default class DetailKnowledge extends React.Component {
 
@@ -31,14 +33,16 @@ export default class DetailKnowledge extends React.Component {
         const { navigation } = this.props;
         cId = navigation.getParam('cid', '-1');
 
-        pageNo = 0;
-        this.fetchData(pageNo);
+        StorageOpt.loaddata("cookie", (result) => {
+            cookie = result;
+            pageNo = 0;
+            this.fetchData(pageNo);
+        });
     }
 
     fetchData(pageNo) {
         const REQUEST_URL = "https://www.wanandroid.com/article/list/" + pageNo + "/json?cid=";
-        console.log(REQUEST_URL + cId);
-        fetch(REQUEST_URL + cId)
+        fetch(REQUEST_URL + cId, {method : 'GET', headers: {'Cookie': cookie}})
             .then((response) => {
                 return response.json();
             })
@@ -84,7 +88,7 @@ export default class DetailKnowledge extends React.Component {
             <View style={styles.loading}>
                 <ActivityIndicator
                     animating={true}
-                    color='blue'
+                    color='#549cf8'
                     size="large"
                 />
             </View>
@@ -99,7 +103,9 @@ export default class DetailKnowledge extends React.Component {
                 </View>
                 <View style={styles.authorTime}>
                     <Text style={styles.author}>{item.niceDate}.{item.author}</Text>
-                    <Image source={require('./image/ic_uncollect.png')} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
+                    <TouchableOpacity onPress={this._clickCollect.bind(this, item)}>
+                        <Image source={item.collect ? require('./image/ic_collected.png') : require('./image/ic_uncollect.png')} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -108,6 +114,60 @@ export default class DetailKnowledge extends React.Component {
     _clickItem = (item) => {
         this.props.navigation.navigate("MyWeb", {url: item.link, desc: item.title});
     };
+
+    _clickCollect = (item) => {
+        if (cookie === null || cookie === "") {
+            this.props.navigation.navigate("RegisterLogin");
+        } else {
+            if (item.collect) {
+                const unCollectUrl = "https://www.wanandroid.com/lg/uncollect_originId/" + item.id + "/json";
+                this.collectFetchData(unCollectUrl, "collect", item);
+            } else {
+                const collectUrl = "https://www.wanandroid.com/lg/collect/" + item.id + "/json";
+                this.collectFetchData(collectUrl, "", item);
+            }
+        }
+    };
+
+    collectFetchData(url, type, item) {
+        fetch(url, {method : 'POST', headers: {'Cookie': cookie}})
+            .then((response) => {
+                return response.json();
+            })
+            .then((responseData) => {
+                if (responseData.errorCode === 0) {//执行成功
+                    this.modifyDataArray(this.state.dataArray, item);
+                    if (type === "collect") {
+                        ToastAndroid.show("已取消收藏", ToastAndroid.SHORT);
+                    } else {
+                        ToastAndroid.show("收藏成功", ToastAndroid.SHORT);
+                        this.props.navigation.navigate("Collect");
+                    }
+                } else {
+                    if (type === "collect") {
+                        ToastAndroid.show("取消收藏失败", ToastAndroid.SHORT);
+                    } else {
+                        ToastAndroid.show("收藏失败", ToastAndroid.SHORT);
+                    }
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+    }
+
+    modifyDataArray(_arr, _obj) {
+        let length = _arr.length;
+        for (let i = 0; i < length; i++) {
+            if (_arr[i].id === _obj.id) {
+                this.state.dataArray[i].collect = !this.state.dataArray[i].collect;
+                break;
+            }
+        }
+        this.setState({
+            dataArray: this.state.dataArray
+        });
+    }
 
     _renderFooter() {
         if (this.state.showFoot === 1) {
@@ -120,7 +180,7 @@ export default class DetailKnowledge extends React.Component {
             return (
                 <View style={styles.footer}>
                     <ActivityIndicator animating={true}
-                                       color='blue'
+                                       color='#549cf8'
                                        size="small"/>
                     <Text>正在加载更多数据...</Text>
                 </View>
@@ -152,7 +212,7 @@ export default class DetailKnowledge extends React.Component {
 class ItemDivideComponent extends Component {
     render() {
         return (
-            <View style={{height: 1, backgroundColor: 'skyblue'}}/>
+            <View style={{height: 1, backgroundColor: '#549cf8'}}/>
         );
     }
 }

@@ -10,7 +10,7 @@ import {
     TouchableOpacity, DeviceEventEmitter
 } from "react-native";
 
-const REQUEST_URL = "https://api-m.mtime.cn/movie/detail.api?locationId=561&movieId=";
+const REQUEST_URL = "https://ticket-api-m.mtime.cn/movie/detail.api?locationId=561&movieId=";
 
 let movieId = -1;
 /**
@@ -22,7 +22,7 @@ export default class MovieDetail extends Component {
 
         title: `${navigation.state.params.item.t}`,
         headerStyle: {
-            backgroundColor: 'transparent',
+            backgroundColor: '#549cf8',
         },
         headerTintColor: '#fff',
     });
@@ -31,12 +31,10 @@ export default class MovieDetail extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            isRefreshing: false,
             //网络请求状态
             error: false,
             errorInfo: "",
-            dataArray: [],
-            showFoot: 0, // 控制foot， 0：隐藏footer  1：已加载完成,没有更多数据   2 ：显示加载中
+            movieDetails: Object,
         };
     }
 
@@ -46,31 +44,17 @@ export default class MovieDetail extends Component {
 
     fetchData() {
         const req_url = REQUEST_URL + movieId;
-        console.log(req_url);
         fetch(req_url)
             .then((response) => {
                 return response.json();
             })
             .then((responseData) => {
-                let data = responseData.ms;
-                /**
-                 * 这里改变dataArray的值是因为防止下拉刷新数据的时候，屏幕闪烁
-                 */
-                if (this.state.isRefreshing) {
-                    this.setState({
-                        dataArray:[]
-                    })
-                }
 
-                let foot = 0;
                 this.setState({
                     //复制数据源
-                    dataArray: this.state.dataArray.concat(data),
-                    showFoot: foot,
+                    movieDetails: responseData.data,
                     isLoading: false,
-                    isRefreshing: false,
                 });
-                data = null;
             })
             .catch((error) => {
                 console.log(error)
@@ -83,8 +67,31 @@ export default class MovieDetail extends Component {
         if (this.state.isLoading) {
             return this.renderLoadingView();
         }
+        const movie = this.state.movieDetails;
+        console.log(movie.basic.video.img);
         return (
-            <Text/>
+            <ScrollView>
+                <View style={styles.container}>
+                    <Text style={styles.commonSpecialText}>"{movie.basic.commentSpecial}"</Text>
+                    <Text style={styles.title}>简介</Text>
+                    <Text style={{margin: 10}}>{movie.basic.story}</Text>
+                    <Text style={styles.title}>演职员</Text>
+                    <Text style={styles.title}>票房</Text>
+                    <View style={{flex: 1, flexDirection:'row', justifyContent:'space-between', backgroundColor: '#E9C2A6', marginLeft: 16, marginRight: 16, paddingLeft: 24, paddingRight: 30, paddingTop: 8, paddingBottom: 8}}>
+                        <Text style={{color:'red', fontSize: 16}}>{movie.boxOffice.todayBoxDes}</Text>
+                        <Text style={{color:'red', fontSize: 16, paddingRight: 28}}>{movie.boxOffice.totalBoxDes}</Text>
+                        <Text style={{color:'red', fontSize: 16, paddingRight: 18}}>{movie.boxOffice.ranking}</Text>
+                    </View>
+                    <View style={{flex: 1, flexDirection:'row', justifyContent:'space-between', backgroundColor: '#E9C2A6', marginLeft: 16, marginRight: 16, paddingLeft: 20, paddingRight: 20, paddingTop: 8, paddingBottom: 8}}>
+                        <Text style={{fontSize: 16}}>今日实时(万)</Text>
+                        <Text style={{fontSize: 16}}>累计票房(亿)</Text>
+                        <Text style={{fontSize: 16}}>累计排名</Text>
+                    </View>
+                    <Text style={styles.title}>预告片</Text>
+                    <Image source={{uri: movie.basic.video.img}} style={styles.image}/>
+                    <Text style={styles.title}>剧照</Text>
+                </View>
+            </ScrollView>
         );
     }
 
@@ -93,32 +100,15 @@ export default class MovieDetail extends Component {
             <View style={styles.loading}>
                 <ActivityIndicator
                     animating={true}
-                    color='skyblue'
+                    color='#549cf8'
                     size="large"
                 />
             </View>
         );
     }
 
-    renderData({item}) {
-        return (
-            <TouchableOpacity onPress={this._clickItem.bind(this, item)}>
-                <View style={styles.container}>
-                    <Image source={{uri: item.img}} style={styles.image}/>
-                    <View style={styles.content}>
-                        <Text>{item.t}</Text>
-                        <Text>导演：{item.dN}</Text>
-                        <Text>主演：{item.actors}</Text>
-                        <Text>类型：{item.movieType}</Text>
-                        <Text>评分：{item.r}</Text>
-                    </View>
-                </View>
-            </TouchableOpacity>
-        );
-    }
 
     _clickItem = (item) => {
-        // this.props.navigation.navigate("MyWeb", {url: item.link, desc: item.title});
     };
 
     _renderFooter() {
@@ -176,7 +166,7 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: 'column',
     },
     loading: {
         flex: 1,
@@ -185,10 +175,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     image: {
-        width: 120,
-        height: 160,
-        marginTop: 6,
-        marginBottom: 6
+        width: null,
+        height: 200,
+        marginTop: 8,
+        marginBottom: 8,
+        marginLeft: 16,
+        marginRight: 16
     },
     content: {
         flexDirection: 'column',
@@ -214,4 +206,14 @@ const styles = StyleSheet.create({
         color: '#999999',
         fontSize: 14
     },
+    commonSpecialText: {
+        fontSize:14,
+        fontWeight:'bold',
+        fontStyle:'italic',
+        margin: 8
+    },
+    title: {
+        fontSize:18,
+        margin: 8
+    }
 });

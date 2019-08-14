@@ -66,7 +66,6 @@ export default class WanAndroid extends Component {
     }
 
     fetchData(category, pageNo) {
-        console.log("fetchData=" + cookie);
         const requestUrl = "https://www.wanandroid.com/article/" + category + "/" + pageNo + "/json";
         fetch(requestUrl, {method : 'GET', headers: {'Cookie': cookie}})
             .then((response) => {

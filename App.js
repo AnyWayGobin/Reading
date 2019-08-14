@@ -84,6 +84,19 @@ const DouBanTabStack = createStackNavigator({
     MovieDetail: MovieDetail,
 });
 
+const MoreTabNavigator = createMaterialTopTabNavigator({
+        Duanzi: Duanzi,
+    },
+    {
+        initialRouteName : "Duanzi",
+        navigationOptions:{
+            tabBarLabel:"更多",
+        },
+        tabBarOptions:{
+            indicatorStyle:{height:0}
+        }
+    });
+
 
 //----------------------------底部TAB页------------------------------------
 
@@ -112,7 +125,7 @@ const bottomNavigator = createBottomTabNavigator({
                 tabBarLabel:"豆瓣",
             }
         },
-        Duanzi: Duanzi,
+        MoreTab: MoreTabNavigator
     });
 
 const RootStack = createStackNavigator({
