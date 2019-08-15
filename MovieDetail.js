@@ -44,6 +44,7 @@ export default class MovieDetail extends Component {
 
     fetchData() {
         const req_url = REQUEST_URL + movieId;
+        console.log(req_url);
         fetch(req_url)
             .then((response) => {
                 return response.json();
@@ -76,13 +77,14 @@ export default class MovieDetail extends Component {
                     <Text style={styles.title}>简介</Text>
                     <Text style={{margin: 10}}>{movie.basic.story}</Text>
                     <Text style={styles.title}>演职员</Text>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>{this.showActorImgs(movie.basic.director, movie.basic.actors)}</ScrollView>
                     <Text style={styles.title}>票房</Text>
-                    <View style={{flex: 1, flexDirection:'row', justifyContent:'space-between', backgroundColor: '#E9C2A6', marginLeft: 16, marginRight: 16, paddingLeft: 24, paddingRight: 30, paddingTop: 8, paddingBottom: 8}}>
+                    <View style={{flex: 1, flexDirection:'row', justifyContent:'space-between', backgroundColor: '#FFF0F0', marginLeft: 16, marginRight: 16, paddingLeft: 24, paddingRight: 30, paddingTop: 8, paddingBottom: 8}}>
                         <Text style={{color:'red', fontSize: 16}}>{movie.boxOffice.todayBoxDes}</Text>
                         <Text style={{color:'red', fontSize: 16, paddingRight: 28}}>{movie.boxOffice.totalBoxDes}</Text>
                         <Text style={{color:'red', fontSize: 16, paddingRight: 18}}>{movie.boxOffice.ranking}</Text>
                     </View>
-                    <View style={{flex: 1, flexDirection:'row', justifyContent:'space-between', backgroundColor: '#E9C2A6', marginLeft: 16, marginRight: 16, paddingLeft: 20, paddingRight: 20, paddingTop: 8, paddingBottom: 8}}>
+                    <View style={{flex: 1, flexDirection:'row', justifyContent:'space-between', backgroundColor: '#FFF0F0', marginLeft: 16, marginRight: 16, paddingLeft: 20, paddingRight: 20, paddingTop: 8, paddingBottom: 8}}>
                         <Text style={{fontSize: 16}}>今日实时(万)</Text>
                         <Text style={{fontSize: 16}}>累计票房(亿)</Text>
                         <Text style={{fontSize: 16}}>累计排名</Text>
@@ -90,10 +92,40 @@ export default class MovieDetail extends Component {
                     <Text style={styles.title}>预告片</Text>
                     <Image source={{uri: movie.basic.video.img}} style={styles.image}/>
                     <Text style={styles.title}>剧照</Text>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>{this.showMovieImgs(movie.basic.stageImg.list)}</ScrollView>
                 </View>
             </ScrollView>
         );
     }
+
+    showActorImgs(director, actors) {
+        let images = [];
+        for (let i = -1; i < actors.length; i++) {
+            let actor;
+            if (i > -1) {
+                actor = actors[i];
+            }
+            images.push(
+                <View style={{flex:1, flexDirection: 'column'}}>
+                    <Image style={i === -1 ? {width: 100, height: 120, marginLeft: 20} : {width: 100, height: 120, marginLeft: 10}} source={{uri: i === -1 ? director.img : actor.img}}/>
+                    <Text style={i === -1 ? {fontSize: 16, marginLeft: 20} : {fontSize: 16, marginLeft: 10}}>{i === -1 ? director.name : actor.name}</Text>
+                    <Text style={i === -1 ? {color:'gray', marginLeft: 20} : {color:'gray', marginLeft: 10}}>{i === -1 ? "导演" : actor.roleName}</Text>
+                </View>
+            )
+        }
+        return images;
+    };
+
+    showMovieImgs(movieImgs) {
+        let images = [];
+        for (let i = 0; i < movieImgs.length; i++) {
+            let movieImg = movieImgs[i];
+            images.push(
+                <Image style={{width: 130, height: 10, marginLeft: 15, marginBottom: 30}} source={{uri: movieImg.imgUrl}}/>
+            )
+        }
+        return images;
+    };
 
     renderLoadingView() {
         return (
