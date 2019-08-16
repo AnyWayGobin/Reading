@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {
     Image,
-    FlatList,
     StyleSheet,
     Text,
     View,
     ActivityIndicator,
     ScrollView,
-    TouchableOpacity, DeviceEventEmitter
 } from "react-native";
 
 const REQUEST_URL = "https://ticket-api-m.mtime.cn/movie/detail.api?locationId=561&movieId=";
@@ -64,7 +62,8 @@ export default class MovieDetail extends Component {
 
     render() {
         const { navigation } = this.props;
-        movieId = navigation.getParam('item').movieId;
+        const movieDetail = navigation.getParam('item');
+        movieId = movieDetail.movieId;
         if (this.state.isLoading) {
             return this.renderLoadingView();
         }
@@ -73,6 +72,23 @@ export default class MovieDetail extends Component {
         return (
             <ScrollView>
                 <View style={styles.container}>
+                    <View style={{flex:1, flexDirection:'row'}}>
+                        <Image source={{uri: movie.basic.img}} style={{width: 100, height: 140, margin: 6}}/>
+                        <View style={styles.content}>
+                            <View style={{ flexDirection:'row'}}>
+                                <Text style={{color:'red'}}>评分：{movie.basic.overallRating} </Text>
+                                <Text>{movie.basic.personCount}人评分</Text>
+                            </View>
+                            <View style={{ flexDirection:'row'}}>
+                                <Text style={{textDecorationLine:'underline', textDecorationColor:'red', textDecorationStyle:'solid'}}>导演</Text>
+                                <Text>：{movie.basic.director.name}</Text>
+                            </View>
+                            <Text>主演：{movieDetail.actors}</Text>
+                            <Text>类型：{movieDetail.movieType}</Text>
+                            <Text>片长：{movie.basic.mins}</Text>
+                            <Text>上映时间：{movie.basic.releaseDate}</Text>
+                        </View>
+                    </View>
                     <Text style={styles.commonSpecialText}>"{movie.basic.commentSpecial}"</Text>
                     <Text style={styles.title}>简介</Text>
                     <Text style={{margin: 10}}>{movie.basic.story}</Text>
@@ -121,7 +137,7 @@ export default class MovieDetail extends Component {
         for (let i = 0; i < movieImgs.length; i++) {
             let movieImg = movieImgs[i];
             images.push(
-                <Image style={{width: 130, height: 10, marginLeft: 15, marginBottom: 30}} source={{uri: movieImg.imgUrl}}/>
+                <Image style={{width: 130, height: 100, marginLeft: 15, marginBottom: 30}} source={{uri: movieImg.imgUrl}}/>
             )
         }
         return images;
@@ -186,14 +202,6 @@ export default class MovieDetail extends Component {
     }
 }
 
-class ItemDivideComponent extends Component {
-    render() {
-        return (
-            <View style={{marginLeft: 120, height: 1, backgroundColor: 'skyblue'}}/>
-        );
-    }
-}
-
 const styles = StyleSheet.create({
 
     container: {
@@ -218,7 +226,8 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        margin: 5,
+        marginTop: 20,
+        marginLeft: 5
     },
     footer: {
         flexDirection: 'row',

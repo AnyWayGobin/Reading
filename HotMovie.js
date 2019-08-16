@@ -6,11 +6,8 @@ import {
     Text,
     View,
     ActivityIndicator,
-    ScrollView,
-    TouchableOpacity, DeviceEventEmitter
+    TouchableOpacity
 } from "react-native";
-import PageScrollView from 'react-native-page-scrollview';
-import Swiper from 'react-native-swiper';
 
 const REQUEST_URL = "https://api-m.mtime.cn/Showtime/LocationMovies.api?locationId=561";
 
