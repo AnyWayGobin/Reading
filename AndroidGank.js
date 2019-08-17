@@ -10,6 +10,7 @@ import {
     DeviceEventEmitter
 } from "react-native";
 import { Card } from 'react-native-elements'
+import BaseComponent from "./BaseComponent";
 
 let pageNo = 1;//当前第几页
 const REQUEST_URL = "http://gank.io/api/data/Android/10/";
@@ -17,7 +18,7 @@ const REQUEST_URL = "http://gank.io/api/data/Android/10/";
 /**
  * 安卓干货
  */
-export default class AndroidGank extends Component {
+export default class AndroidGank extends BaseComponent {
 
     static navigationOptions = {
         title: "大安卓"

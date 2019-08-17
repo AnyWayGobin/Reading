@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Image, FlatList, StyleSheet, Text, View, ActivityIndicator,TouchableOpacity  } from "react-native";
+import BaseComponent from "./BaseComponent";
 
 let pageNo = 1;//当前第几页
 const REQUEST_URL = "https://gank.io/api/data/福利/10/";
@@ -8,7 +9,7 @@ let itemNo=0;//item的个数
 /**
  * 福利
  */
-export default class Welfare extends Component {
+export default class Welfare extends BaseComponent {
 
     static navigationOptions = {
         title: "福利"

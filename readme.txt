@@ -41,3 +41,5 @@ react native和原生通信的三种方式：
 callback、promise、DeviceEventEmitter
 
 ref this.refs是什么东西？
+
+引用android资源文件夹下的图片的时候，直接 uri:'资源名称' 就可以了

@@ -5,7 +5,7 @@ import {
     TextInput,
     Text,
     TouchableOpacity,
-    ToastAndroid, NativeModules,
+    ToastAndroid,
 } from 'react-native';
 import StorageOpt from "./StorageOpt"
 

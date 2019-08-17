@@ -7,10 +7,14 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
+    Platform,
+    BackHandler,
+    ToastAndroid
 } from "react-native";
 import PopupDialog, {DialogContent, DialogTitle, SlideAnimation} from 'react-native-popup-dialog';
 import StorageOpt from "./StorageOpt"
+import BaseComponent from "./BaseComponent"
 
 let pageNo = 1;//当前第几页
 const REQUEST_GANK_URL = "http://gank.io/api/today";
@@ -34,6 +38,7 @@ export default class Ganks extends Component {
         super(props);
         this.state = {
             isLoading: false,
+            isRefreshing: false,
             //网络请求状态
             error: false,
             errorInfo: "",
@@ -52,7 +57,7 @@ export default class Ganks extends Component {
             this.fetchData(category, pageNo);
             this.setState({
                 dataArray:[],
-                isLoading: true
+                isRefreshing: true
             });
         });
     }
@@ -71,6 +76,16 @@ export default class Ganks extends Component {
             })
             .then((responseData) => {
                 let data = responseData.results;
+
+                /**
+                 * 这里改变dataArray的值是因为防止下拉刷新数据的时候，屏幕闪烁
+                 */
+                if (this.state.isRefreshing) {
+                    this.setState({
+                        dataArray:[]
+                    })
+                }
+
                 let foot = 0;
                 if (data.length === 0 || pageNo === 5) {
                     foot = 1;
@@ -78,7 +93,7 @@ export default class Ganks extends Component {
                 this.setState({
                     //复制数据源
                     dataArray: this.state.dataArray.concat(data),
-                    isLoading: false,
+                    isRefreshing: false,
                     showFoot:foot,
                 });
                 data = null;
@@ -112,6 +127,8 @@ export default class Ganks extends Component {
                 ListHeaderComponent={FlatListHeaderComponent.bind(this)}
                 ListFooterComponent={this._renderFooter.bind(this)}
                 onEndReached={this._onEndReached.bind(this)}
+                onRefresh={this._onRefresh.bind(this)}
+                refreshing={this.state.isRefreshing}
                 ItemSeparatorComponent={ItemDivideComponent}
                 onEndReachedThreshold={0.1}
                 keyExtractor={item => item.id}/>
@@ -203,6 +220,14 @@ export default class Ganks extends Component {
         //获取数据
         this.fetchData(category, pageNo);
     }
+
+    _onRefresh() {
+        this.setState({
+            isRefreshing:true,
+        });
+        pageNo = 0;
+        this.fetchData(category, pageNo);
+    }
 }
 
 class ItemDivideComponent extends Component {
@@ -213,7 +238,7 @@ class ItemDivideComponent extends Component {
     }
 }
 
-class FlatListHeaderComponent extends Component {
+class FlatListHeaderComponent extends BaseComponent {
 
     constructor(props){
         super(props);
@@ -225,12 +250,29 @@ class FlatListHeaderComponent extends Component {
         this.renderCategory = this.renderCategory.bind(this);
     }
 
+    onBackAndroid = () => {
+        if (this.state.showDialog) {
+            this.setState({
+                showDialog: false
+            });
+            return true;
+        }
+        if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+            //最近2秒内按过back键，可以退出应用。
+            BackHandler.exitApp();
+            return;
+        }
+        this.lastBackPressed = Date.now();
+        ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+        return true;
+    };
+
     render() {
         return (
-            <View>
-            <TouchableOpacity style={styles.button} onPress={this.showFadeAnimationDialog}>
-                <Text style={{color:'white'}}>全部分类</Text>
-            </TouchableOpacity>
+            <View style={{flex:1, flexDirection: 'row', justifyContent:'center'}}>
+                <TouchableOpacity style={styles.button} onPress={this.showFadeAnimationDialog}>
+                    <Text style={{color:'white'}}>全部分类</Text>
+                </TouchableOpacity>
 
                 <PopupDialog
                     width={0.8}
@@ -247,7 +289,8 @@ class FlatListHeaderComponent extends Component {
                                 renderItem={this.renderCategory}
                                 ItemSeparatorComponent={ItemDivideComponent}
                                 onEndReachedThreshold={0.02}
-                                keyExtractor={item => item.id}/>
+                                keyExtractor={item => item.id}
+                                showsVerticalScrollIndicator={false}/>
                         </View>
                     </DialogContent>
                 </PopupDialog>
@@ -308,9 +351,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     author: {
-        margin: 5,
+        margin: 10,
         color: 'gray',
-        fontSize: 10,
+        fontSize: 14,
     },
     time: {
         margin: 5,
@@ -336,11 +379,10 @@ const styles = StyleSheet.create({
         fontSize:14
     },
     button: {
-        alignItems: 'center',
         width: 80,
         backgroundColor: 'skyblue',
         padding: 10,
         margin: 20,
         borderRadius: 5
-    }
+    },
 });

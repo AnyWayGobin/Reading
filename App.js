@@ -38,8 +38,6 @@ const WanAndroidTabStack = createStackNavigator({
             header: null,
         },
     },
-    DetailKnowledge: DetailKnowledge,
-    MyWeb: MyWeb
 });
 
 //----------------------------发现（干货）------------------------------------
@@ -60,8 +58,7 @@ const FoundTabStack = createStackNavigator({
             header: null,
         },
     },
-    MyWeb: MyWeb,
-    ImagePreView: ImagePreView
+
 });
 
 //----------------------------豆瓣------------------------------------
@@ -136,7 +133,10 @@ const RootStack = createStackNavigator({
         },
     },
     RegisterLogin: RegisterLogin,
-    Collect: Collect
+    Collect: Collect,
+    MyWeb: MyWeb,
+    DetailKnowledge: DetailKnowledge,
+    ImagePreView: ImagePreView
 });
 
 

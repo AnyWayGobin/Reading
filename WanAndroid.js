@@ -6,11 +6,11 @@ import {
     Text,
     View,
     ActivityIndicator,
-    ScrollView,
     TouchableOpacity, DeviceEventEmitter, ToastAndroid
 } from "react-native";
 import StorageOpt from "./StorageOpt"
 import Swiper from 'react-native-swiper';
+import BaseComponent from "./BaseComponent";
 
 const EVENT_NAME = "notifyChangeData";
 let category = "list";
@@ -22,7 +22,7 @@ let cookie = "";
 /**
  * 玩安卓
  */
-export default class WanAndroid extends Component {
+export default class WanAndroid extends BaseComponent {
 
     static navigationOptions = {
         title: "玩安卓"

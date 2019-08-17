@@ -8,13 +8,14 @@ import {
     ActivityIndicator,
     TouchableOpacity
 } from "react-native";
+import BaseComponent from "./BaseComponent";
 
 const REQUEST_URL = "https://api-m.mtime.cn/Showtime/LocationMovies.api?locationId=561";
 
 /**
  * 豆瓣电影热映榜
  */
-export default class HotMovie extends Component {
+export default class HotMovie extends BaseComponent {
 
     static navigationOptions = {
         title: "热映榜"

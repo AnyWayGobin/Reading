@@ -6,16 +6,16 @@ import {
     Text,
     View,
     ActivityIndicator,
-    TouchableOpacity,
 } from "react-native";
 import {Card} from "react-native-elements";
+import BaseComponent from "./BaseComponent";
 
 const REQUEST_URL = "https://api-m.mtime.cn/Movie/MovieComingNew.api?locationId=561";
 
 /**
  * 豆瓣电影即将上映榜
  */
-export default class CommingMovie extends Component {
+export default class CommingMovie extends BaseComponent {
 
     static navigationOptions = {
         title: "即将上映"

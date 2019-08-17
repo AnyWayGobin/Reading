@@ -4,7 +4,7 @@ import {
     Text,
     View,
     FlatList,
-    Button, ActivityIndicator, TouchableOpacity, Image, ToastAndroid
+    ActivityIndicator, TouchableOpacity, Image, ToastAndroid
 } from 'react-native';
 import StorageOpt from "./StorageOpt"
 

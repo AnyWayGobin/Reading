@@ -3,10 +3,11 @@ import {Text, StyleSheet, View, ScrollView} from 'react-native';
 import FlowView from './FlowLayout'
 import DetailKnowledge from './DetailKnowledge'
 import PropTypes from "prop-types";
+import BaseComponent from "./BaseComponent";
 
 const REQUEST_URL = "https://www.wanandroid.com/tree/json";
 
-export default class KnowledgeTree extends Component {
+export default class KnowledgeTree extends BaseComponent {
 
     static navigationOptions = {
         title: "知识体系"
