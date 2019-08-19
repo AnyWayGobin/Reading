@@ -6,9 +6,10 @@ import {
     Text,
     View,
     ActivityIndicator,
-    DeviceEventEmitter
+    DeviceEventEmitter, BackHandler
 } from "react-native";
 import moment from "moment/moment";
+import BaseComponent from "./BaseComponent";
 
 let pageNo = 1;//当前第几页
 const REQUEST_URL = "http://m2.qiushibaike.com/article/list/text?page=";
@@ -16,7 +17,7 @@ const REQUEST_URL = "http://m2.qiushibaike.com/article/list/text?page=";
 /**
  * 段子
  */
-export default class Duanzi extends Component {
+export default class Duanzi extends BaseComponent {
 
     static navigationOptions = {
         title: "段子"
@@ -33,10 +34,21 @@ export default class Duanzi extends Component {
             dataArray: [],
             showFoot: 0, // 控制foot， 0：隐藏footer  1：已加载完成,没有更多数据   2 ：显示加载中
         };
+        this._didFocusSubscription = props.navigation.addListener('didFocus', payload =>
+            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
+        );
     }
 
     componentDidMount() {
         this.fetchData(pageNo);
+        this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload =>
+            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
+        );
+    }
+
+    componentWillUnmount() {
+        this._didFocusSubscription && this._didFocusSubscription.remove();
+        this._willBlurSubscription && this._willBlurSubscription.remove();
     }
 
     fetchData(pageNo) {

@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
-import {Text} from "react-native";
+import {Text, BackHandler} from "react-native";
 import { WebView } from 'react-native-webview';
 
 export default class MyWeb extends Component {
+
+    webView = {
+        canGoBack: false,
+        ref: null,
+    };
 
     static navigationOptions = ({ navigation }) => ({
 
@@ -12,6 +17,29 @@ export default class MyWeb extends Component {
         },
         headerTintColor: '#fff',
     });
+
+    onAndroidBackPress = () => {
+        // this.webView.ref = null;
+        if (this.webView.canGoBack && this.webView.ref) {//直接用对象判断，就表示它不等于null，比如这里的this.webView.ref
+            console.log("return true");
+            this.webView.ref.goBack();
+            return true;
+        }
+        console.log("return false");
+        return false;
+    };
+
+    componentWillMount() {
+        if (Platform.OS === 'android') {
+            BackHandler.addEventListener('hardwareBackPress', this.onAndroidBackPress);
+        }
+    }
+
+    componentWillUnmount() {
+        if (Platform.OS === 'android') {
+            BackHandler.removeEventListener('hardwareBackPress', this.onAndroidBackPress);
+        }
+    }
 
     render() {
         const { navigation } = this.props;
@@ -23,20 +51,10 @@ export default class MyWeb extends Component {
         }
         return (
             <WebView
+                ref={(webView) => { this.webView.ref = webView; }}
                 source={{ uri: url }}
-                onNavigationStateChange={this._onNavigationStateChange}
+                onNavigationStateChange={(navState) => { this.webView.canGoBack = navState.canGoBack; }}
             />
         );
-    }
-
-    // 获取 webview 事件返回的 canGoBack 属性 ， 判断网页是否可以回退
-    _onNavigationStateChange (navState){
-        if(navState.canGoBack){
-            console.log("canGoBack");
-            MyWeb.goBack();
-        } else {
-            console.log("can not GoBack");
-            this.props.navigation.pop();
-        }
     }
 }

@@ -46,6 +46,9 @@ export default class Ganks extends BaseComponent {
             dataArray: [],
             showFoot:0, // 控制foot， 0：隐藏footer  1：已加载完成,没有更多数据   2 ：显示加载中
         };
+        this._didFocusSubscription = props.navigation.addListener('didFocus', payload =>
+            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
+        );
     }
 
     componentDidMount() {
@@ -61,12 +64,17 @@ export default class Ganks extends BaseComponent {
                 isRefreshing: true
             });
         });
+        this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload =>
+            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
+        );
     }
 
     componentWillUnmount() {
         if (this.listener) {
             this.listener.remove();
         }
+        this._didFocusSubscription && this._didFocusSubscription.remove();
+        this._willBlurSubscription && this._willBlurSubscription.remove();
     }
 
     fetchData(category, pageNo) {
@@ -123,27 +131,6 @@ export default class Ganks extends BaseComponent {
         }
         return (
             <View>
-                <NavigationEvents
-                    onWillFocus={ ()=>{
-                        console.log("Ganks onWillFocus");
-                    }}
-                    onDidFocus={ ()=>{
-                        console.log("Ganks onDidFocus");
-                        if (Platform.OS === 'android') {
-                            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
-                        }
-                    }}
-                    onWillBlur={ ()=>{
-                        console.log("Ganks onWillBlur");
-                    }}
-                    onDidBlur={ ()=>{
-                        console.log("Ganks onDidBlur");
-                        if (Platform.OS === 'android') {
-                            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
-                        }
-                    }}
-                />
-
                 <FlatList
                     data={this.state.dataArray}
                     renderItem={this.renderWelfare.bind(this)}
@@ -264,7 +251,7 @@ class ItemDivideComponent extends Component {
     }
 }
 
-class FlatListHeaderComponent extends BaseComponent {
+class FlatListHeaderComponent extends Component {
 
     constructor(props){
         super(props);

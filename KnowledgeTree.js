@@ -25,10 +25,21 @@ export default class KnowledgeTree extends BaseComponent {
             secLevelDataArray: [],
             selectedState: []
         };
+        this._didFocusSubscription = props.navigation.addListener('didFocus', payload =>
+            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
+        );
     }
 
     componentDidMount() {
         this.fetchData();
+        this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload =>
+            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
+        );
+    }
+
+    componentWillUnmount() {
+        this._didFocusSubscription && this._didFocusSubscription.remove();
+        this._willBlurSubscription && this._willBlurSubscription.remove();
     }
 
     fetchData() {
@@ -95,26 +106,6 @@ export default class KnowledgeTree extends BaseComponent {
 
         return (
             <View>
-                <NavigationEvents
-                    onWillFocus={ ()=>{
-                        console.log("KnowledgeTree onWillFocus");
-                    }}
-                    onDidFocus={ ()=>{
-                        console.log("KnowledgeTree onDidFocus");
-                        if (Platform.OS === 'android') {
-                            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
-                        }
-                    }}
-                    onWillBlur={ ()=>{
-                        console.log("KnowledgeTree onWillBlur");
-                    }}
-                    onDidBlur={ ()=>{
-                        console.log("KnowledgeTree onDidBlur");
-                        if (Platform.OS === 'android') {
-                            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
-                        }
-                    }}
-                />
                 <ScrollView>
                     <View style={styles.container}>
                         <Text style={{fontSize: 18, margin: 10, fontWeight: "bold"}}>一级分类</Text>
