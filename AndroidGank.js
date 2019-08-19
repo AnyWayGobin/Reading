@@ -37,9 +37,6 @@ export default class AndroidGank extends BaseComponent {
             dataArray: [],
             showFoot: 0, // 控制foot， 0：隐藏footer  1：已加载完成,没有更多数据   2 ：显示加载中
         };
-        this._didFocusSubscription = props.navigation.addListener('didFocus', payload =>
-            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
-        );
     }
 
     componentDidMount() {
@@ -51,17 +48,13 @@ export default class AndroidGank extends BaseComponent {
         this.listener = DeviceEventEmitter.addListener(NativeModules.ToastForAndroid.EventName, (msg) => {
             console.log("listener = " + msg.myData);
         });*/
-        this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload =>
-            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
-        );
     }
 
     componentWillUnmount() {
+        super.componentWillUnmount();
         if (this.listener) {
             this.listener.remove();
         }
-        this._didFocusSubscription && this._didFocusSubscription.remove();
-        this._willBlurSubscription && this._willBlurSubscription.remove();
     }
 
     testRnCallNative() {

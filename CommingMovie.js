@@ -34,21 +34,10 @@ export default class CommingMovie extends BaseComponent {
             dataArray: [],
             showFoot: 0, // 控制foot， 0：隐藏footer  1：已加载完成,没有更多数据   2 ：显示加载中
         };
-        this._didFocusSubscription = props.navigation.addListener('didFocus', payload =>
-            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
-        );
     }
 
     componentDidMount() {
         this.fetchData();
-        this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload =>
-            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
-        );
-    }
-
-    componentWillUnmount() {
-        this._didFocusSubscription && this._didFocusSubscription.remove();
-        this._willBlurSubscription && this._willBlurSubscription.remove();
     }
 
     fetchData() {

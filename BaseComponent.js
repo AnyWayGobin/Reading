@@ -11,19 +11,19 @@ export default class BaseComponent extends Component {
         super(props);
     }
 
-    /*componentWillMount() {
-        console.log("componentWillMount");
-        if (Platform.OS === 'android') {
-            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
-        }
+    componentWillMount() {
+        this._didFocusSubscription = this.props.navigation.addListener('didFocus', () =>
+            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
+        );
+        this._willBlurSubscription = this.props.navigation.addListener('willBlur', () =>
+            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
+        );
     }
 
     componentWillUnmount() {
-        console.log("componentWillUnmount");
-        if (Platform.OS === 'android') {
-            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
-        }
-    }*/
+        this._didFocusSubscription && this._didFocusSubscription.remove();
+        this._willBlurSubscription && this._willBlurSubscription.remove();
+    }
 
     onBackAndroid = () => {
         if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {

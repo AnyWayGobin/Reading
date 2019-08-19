@@ -25,21 +25,10 @@ export default class KnowledgeTree extends BaseComponent {
             secLevelDataArray: [],
             selectedState: []
         };
-        this._didFocusSubscription = props.navigation.addListener('didFocus', payload =>
-            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
-        );
     }
 
     componentDidMount() {
         this.fetchData();
-        this._willBlurSubscription = this.props.navigation.addListener('willBlur', payload =>
-            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid)
-        );
-    }
-
-    componentWillUnmount() {
-        this._didFocusSubscription && this._didFocusSubscription.remove();
-        this._willBlurSubscription && this._willBlurSubscription.remove();
     }
 
     fetchData() {
