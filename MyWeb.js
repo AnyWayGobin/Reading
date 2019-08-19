@@ -22,7 +22,21 @@ export default class MyWeb extends Component {
                 );
         }
         return (
-            <WebView source={{ uri: url }} />
+            <WebView
+                source={{ uri: url }}
+                onNavigationStateChange={this._onNavigationStateChange}
+            />
         );
+    }
+
+    // 获取 webview 事件返回的 canGoBack 属性 ， 判断网页是否可以回退
+    _onNavigationStateChange (navState){
+        if(navState.canGoBack){
+            console.log("canGoBack");
+            MyWeb.goBack();
+        } else {
+            console.log("can not GoBack");
+            this.props.navigation.pop();
+        }
     }
 }

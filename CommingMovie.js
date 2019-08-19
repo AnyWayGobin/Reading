@@ -6,9 +6,11 @@ import {
     Text,
     View,
     ActivityIndicator,
+    BackHandler
 } from "react-native";
 import {Card} from "react-native-elements";
 import BaseComponent from "./BaseComponent";
+import {NavigationEvents} from "react-navigation";
 
 const REQUEST_URL = "https://api-m.mtime.cn/Movie/MovieComingNew.api?locationId=561";
 
@@ -74,17 +76,40 @@ export default class CommingMovie extends BaseComponent {
             return this.renderLoadingView();
         }
         return (
-            <FlatList
-                data={this.state.dataArray}
-                renderItem={this.renderData.bind(this)}
-                ListFooterComponent={this._renderFooter.bind(this)}
-                onEndReached={this._onEndReached.bind(this)}
-                onRefresh={this._onRefresh.bind(this)}
-                refreshing={this.state.isRefreshing}
-                onEndReachedThreshold={0.1}
-                keyExtractor={item => item.id}
-                horizontal={false}
-                numColumns = "3"/>
+            <View>
+                <NavigationEvents
+                    onWillFocus={ ()=>{
+                        console.log("CommingMovie onWillFocus");
+                    }}
+                    onDidFocus={ ()=>{
+                        console.log("CommingMovie onDidFocus");
+                        if (Platform.OS === 'android') {
+                            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                    onWillBlur={ ()=>{
+                        console.log("CommingMovie onWillBlur");
+                    }}
+                    onDidBlur={ ()=>{
+                        console.log("CommingMovie onDidBlur");
+                        if (Platform.OS === 'android') {
+                            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                />
+
+                <FlatList
+                    data={this.state.dataArray}
+                    renderItem={this.renderData.bind(this)}
+                    ListFooterComponent={this._renderFooter.bind(this)}
+                    onEndReached={this._onEndReached.bind(this)}
+                    onRefresh={this._onRefresh.bind(this)}
+                    refreshing={this.state.isRefreshing}
+                    onEndReachedThreshold={0.1}
+                    keyExtractor={item => item.id}
+                    horizontal={false}
+                    numColumns = "3"/>
+            </View>
         );
     }
 

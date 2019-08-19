@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Image, StyleSheet, Text, View, ActivityIndicator, Modal} from "react-native";
+import {StyleSheet, Text} from "react-native";
 import ImageViewer from 'react-native-image-zoom-viewer';
 
 export default class ImagePreView extends Component {

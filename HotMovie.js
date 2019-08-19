@@ -6,9 +6,11 @@ import {
     Text,
     View,
     ActivityIndicator,
-    TouchableOpacity
+    TouchableOpacity,
+    BackHandler
 } from "react-native";
 import BaseComponent from "./BaseComponent";
+import {NavigationEvents} from "react-navigation";
 
 const REQUEST_URL = "https://api-m.mtime.cn/Showtime/LocationMovies.api?locationId=561";
 
@@ -74,16 +76,38 @@ export default class HotMovie extends BaseComponent {
             return this.renderLoadingView();
         }
         return (
-            <FlatList
-                data={this.state.dataArray}
-                renderItem={this.renderData.bind(this)}
-                ListFooterComponent={this._renderFooter.bind(this)}
-                onEndReached={this._onEndReached.bind(this)}
-                onRefresh={this._onRefresh.bind(this)}
-                refreshing={this.state.isRefreshing}
-                ItemSeparatorComponent={ItemDivideComponent}
-                onEndReachedThreshold={0.1}
-                keyExtractor={item => item.id} />
+            <View>
+                <NavigationEvents
+                    onWillFocus={ ()=>{
+                        console.log("HotMovie onWillFocus");
+                    }}
+                    onDidFocus={ ()=>{
+                        console.log("HotMovie onDidFocus");
+                        if (Platform.OS === 'android') {
+                            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                    onWillBlur={ ()=>{
+                        console.log("HotMovie onWillBlur");
+                    }}
+                    onDidBlur={ ()=>{
+                        console.log("HotMovie onDidBlur");
+                        if (Platform.OS === 'android') {
+                            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                />
+                <FlatList
+                    data={this.state.dataArray}
+                    renderItem={this.renderData.bind(this)}
+                    ListFooterComponent={this._renderFooter.bind(this)}
+                    onEndReached={this._onEndReached.bind(this)}
+                    onRefresh={this._onRefresh.bind(this)}
+                    refreshing={this.state.isRefreshing}
+                    ItemSeparatorComponent={ItemDivideComponent}
+                    onEndReachedThreshold={0.1}
+                    keyExtractor={item => item.id} />
+            </View>
         );
     }
 

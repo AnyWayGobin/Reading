@@ -15,6 +15,7 @@ import {
 import PopupDialog, {DialogContent, DialogTitle, SlideAnimation} from 'react-native-popup-dialog';
 import StorageOpt from "./StorageOpt"
 import BaseComponent from "./BaseComponent"
+import {NavigationEvents} from "react-navigation";
 
 let pageNo = 1;//当前第几页
 const REQUEST_GANK_URL = "http://gank.io/api/today";
@@ -28,7 +29,7 @@ const slideAnimation = new SlideAnimation({
 /**
  * 所有干货
  */
-export default class Ganks extends Component {
+export default class Ganks extends BaseComponent {
 
     static navigationOptions = {
         title: "干货定制"
@@ -121,17 +122,42 @@ export default class Ganks extends Component {
             return this.renderLoadingView();
         }
         return (
-            <FlatList
-                data={this.state.dataArray}
-                renderItem={this.renderWelfare.bind(this)}
-                ListHeaderComponent={FlatListHeaderComponent.bind(this)}
-                ListFooterComponent={this._renderFooter.bind(this)}
-                onEndReached={this._onEndReached.bind(this)}
-                onRefresh={this._onRefresh.bind(this)}
-                refreshing={this.state.isRefreshing}
-                ItemSeparatorComponent={ItemDivideComponent}
-                onEndReachedThreshold={0.1}
-                keyExtractor={item => item.id}/>
+            <View>
+                <NavigationEvents
+                    onWillFocus={ ()=>{
+                        console.log("Ganks onWillFocus");
+                    }}
+                    onDidFocus={ ()=>{
+                        console.log("Ganks onDidFocus");
+                        if (Platform.OS === 'android') {
+                            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                    onWillBlur={ ()=>{
+                        console.log("Ganks onWillBlur");
+                    }}
+                    onDidBlur={ ()=>{
+                        console.log("Ganks onDidBlur");
+                        if (Platform.OS === 'android') {
+                            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                />
+
+                <FlatList
+                    data={this.state.dataArray}
+                    renderItem={this.renderWelfare.bind(this)}
+                    ListHeaderComponent={FlatListHeaderComponent.bind(this)}
+                    ListFooterComponent={this._renderFooter.bind(this)}
+                    onEndReached={this._onEndReached.bind(this)}
+                    onRefresh={this._onRefresh.bind(this)}
+                    refreshing={this.state.isRefreshing}
+                    ItemSeparatorComponent={ItemDivideComponent}
+                    onEndReachedThreshold={0.1}
+                    keyExtractor={item => item.id}/>
+            </View>
+
+
         );
     }
 

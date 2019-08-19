@@ -6,7 +6,14 @@ import {
     View,
     ActivityIndicator,
     ScrollView,
+    ImageBackground,
+    Dimensions,
+    TouchableOpacity, BackHandler, ToastAndroid
 } from "react-native";
+import BaseComponent from "./BaseComponent";
+import {NavigationEvents} from "react-navigation";
+
+const {height,width} =  Dimensions.get('window');
 
 const REQUEST_URL = "https://ticket-api-m.mtime.cn/movie/detail.api?locationId=561&movieId=";
 
@@ -14,7 +21,7 @@ let movieId = -1;
 /**
  * 电影详情
  */
-export default class MovieDetail extends Component {
+export default class MovieDetail extends BaseComponent {
 
     static navigationOptions = ({ navigation }) => ({
 
@@ -72,6 +79,21 @@ export default class MovieDetail extends Component {
         return (
             <ScrollView>
                 <View style={styles.container}>
+
+                    <NavigationEvents
+                        onWillFocus={ ()=>{
+                            console.log("onWillFocus");
+                        }}
+                        onDidFocus={ ()=>{
+                            console.log("onDidFocus");
+                        }}
+                        onWillBlur={ ()=>{
+                            console.log("onWillBlur");
+                        }}
+                        onDidBlur={ ()=>{
+                            console.log("onDidBlur");
+                        }}/>
+
                     <View style={{flex:1, flexDirection:'row'}}>
                         <Image source={{uri: movie.basic.img}} style={{width: 100, height: 140, margin: 6}}/>
                         <View style={styles.content}>
@@ -106,7 +128,11 @@ export default class MovieDetail extends Component {
                         <Text style={{fontSize: 16}}>累计排名</Text>
                     </View>
                     <Text style={styles.title}>预告片</Text>
-                    <Image source={{uri: movie.basic.video.img}} style={styles.image}/>
+                    <TouchableOpacity onPress={this._clickItem.bind(this, movie.basic.video.url, movie.basic.name)}>
+                        <ImageBackground source={{uri: movie.basic.video.img}} style={styles.image}>
+                            <Image source={{uri: 'icon_film_play'}} style={styles.icon_image} />
+                        </ImageBackground>
+                    </TouchableOpacity>
                     <Text style={styles.title}>剧照</Text>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>{this.showMovieImgs(movie.basic.stageImg.list)}</ScrollView>
                 </View>
@@ -156,7 +182,9 @@ export default class MovieDetail extends Component {
     }
 
 
-    _clickItem = (item) => {
+    _clickItem = (url, name) => {
+        console.log(url);
+        this.props.navigation.navigate("MyWeb", {url: url, desc: name});
     };
 
     _renderFooter() {
@@ -221,6 +249,13 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         marginLeft: 16,
         marginRight: 16
+    },
+    icon_image: {
+        width: 60,
+        height: 60,
+        position:'relative',
+        top:70,
+        left:(width / 2) - 42
     },
     content: {
         flexDirection: 'column',

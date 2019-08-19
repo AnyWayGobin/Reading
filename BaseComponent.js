@@ -3,6 +3,7 @@ import {
     BackHandler,
     Platform, ToastAndroid,
 } from 'react-native';
+import {NavigationEvents} from "react-navigation";
 
 export default class BaseComponent extends Component {
 
@@ -10,15 +11,19 @@ export default class BaseComponent extends Component {
         super(props);
     }
 
-    componentWillMount() {
+    /*componentWillMount() {
+        console.log("componentWillMount");
         if (Platform.OS === 'android') {
             BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
         }
     }
 
     componentWillUnmount() {
-        BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
-    }
+        console.log("componentWillUnmount");
+        if (Platform.OS === 'android') {
+            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
+        }
+    }*/
 
     onBackAndroid = () => {
         if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {

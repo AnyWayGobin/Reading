@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {Text, StyleSheet, View, ScrollView} from 'react-native';
+import {Text, StyleSheet, View, ScrollView, BackHandler} from 'react-native';
+import {NavigationEvents} from "react-navigation";
 import FlowView from './FlowLayout'
 import DetailKnowledge from './DetailKnowledge'
 import PropTypes from "prop-types";
@@ -43,7 +44,6 @@ export default class KnowledgeTree extends BaseComponent {
                     secLevelDataArray: data[0].children,
                     selectedState: new Array(data.length).fill(false),
                 }, ()=> {
-                    console.log("callback");
                     this.state.selectedState[0] = true;
                 });
                 data = null;
@@ -94,18 +94,40 @@ export default class KnowledgeTree extends BaseComponent {
         });
 
         return (
-            <ScrollView>
-                <View style={styles.container}>
-                    <Text style={{fontSize: 18, margin: 10, fontWeight: "bold"}}>一级分类</Text>
-                    <View style={styles.firstLevel}>
-                        {items}
+            <View>
+                <NavigationEvents
+                    onWillFocus={ ()=>{
+                        console.log("KnowledgeTree onWillFocus");
+                    }}
+                    onDidFocus={ ()=>{
+                        console.log("KnowledgeTree onDidFocus");
+                        if (Platform.OS === 'android') {
+                            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                    onWillBlur={ ()=>{
+                        console.log("KnowledgeTree onWillBlur");
+                    }}
+                    onDidBlur={ ()=>{
+                        console.log("KnowledgeTree onDidBlur");
+                        if (Platform.OS === 'android') {
+                            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                />
+                <ScrollView>
+                    <View style={styles.container}>
+                        <Text style={{fontSize: 18, margin: 10, fontWeight: "bold"}}>一级分类</Text>
+                        <View style={styles.firstLevel}>
+                            {items}
+                        </View>
+                        <Text  style={{fontSize: 18, margin: 10, fontWeight: "bold"}}>二级分类</Text>
+                        <View style={styles.firstLevel}>
+                            {secLevelItems}
+                        </View>
                     </View>
-                    <Text  style={{fontSize: 18, margin: 10, fontWeight: "bold"}}>二级分类</Text>
-                    <View style={styles.firstLevel}>
-                        {secLevelItems}
-                    </View>
-                </View>
-            </ScrollView>
+                </ScrollView>
+            </View>
         );
     }
 };

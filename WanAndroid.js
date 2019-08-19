@@ -6,11 +6,12 @@ import {
     Text,
     View,
     ActivityIndicator,
-    TouchableOpacity, DeviceEventEmitter, ToastAndroid
+    TouchableOpacity, DeviceEventEmitter, ToastAndroid,BackHandler
 } from "react-native";
 import StorageOpt from "./StorageOpt"
 import Swiper from 'react-native-swiper';
 import BaseComponent from "./BaseComponent";
+import {NavigationEvents} from "react-navigation";
 
 const EVENT_NAME = "notifyChangeData";
 let category = "list";
@@ -44,7 +45,6 @@ export default class WanAndroid extends BaseComponent {
     componentDidMount() {
         StorageOpt.loaddata("cookie", (result) => {
             cookie = result;
-            console.log("componentWillMount=" + result);
             this.fetchData(category, pageNo);
         });
         this.listener = DeviceEventEmitter.addListener(EVENT_NAME, (newCategory) => {
@@ -105,17 +105,39 @@ export default class WanAndroid extends BaseComponent {
             return this.renderLoadingView();
         }
         return (
-            <FlatList
-                data={this.state.dataArray}
-                renderItem={this.renderData.bind(this)}
-                ListHeaderComponent={FlatListHeaderComponent}
-                ListFooterComponent={this._renderFooter.bind(this)}
-                onEndReached={this._onEndReached.bind(this)}
-                onRefresh={this._onRefresh.bind(this)}
-                refreshing={this.state.isRefreshing}
-                ItemSeparatorComponent={ItemDivideComponent}
-                onEndReachedThreshold={0.1}
-                keyExtractor={item => item.id} />
+            <View>
+                <NavigationEvents
+                    onWillFocus={ ()=>{
+                        console.log("WanAndroid onWillFocus");
+                    }}
+                    onDidFocus={ ()=>{
+                        console.log("WanAndroid onDidFocus");
+                        if (Platform.OS === 'android') {
+                            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                    onWillBlur={ ()=>{
+                        console.log("WanAndroid onWillBlur");
+                    }}
+                    onDidBlur={ ()=>{
+                        console.log("WanAndroid onDidBlur");
+                        if (Platform.OS === 'android') {
+                            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                />
+                <FlatList
+                    data={this.state.dataArray}
+                    renderItem={this.renderData.bind(this)}
+                    ListHeaderComponent={FlatListHeaderComponent}
+                    ListFooterComponent={this._renderFooter.bind(this)}
+                    onEndReached={this._onEndReached.bind(this)}
+                    onRefresh={this._onRefresh.bind(this)}
+                    refreshing={this.state.isRefreshing}
+                    ItemSeparatorComponent={ItemDivideComponent}
+                    onEndReachedThreshold={0.1}
+                    keyExtractor={item => item.id} />
+            </View>
         );
     }
 
@@ -259,7 +281,7 @@ export default class WanAndroid extends BaseComponent {
     }
 }
 
-class FlatListHeaderComponent extends Component {
+class FlatListHeaderComponent extends BaseComponent {
 
     constructor(props){
         super(props);
@@ -273,6 +295,26 @@ class FlatListHeaderComponent extends Component {
     render() {
         return (
             <View>
+                <NavigationEvents
+                    onWillFocus={ ()=>{
+                        console.log("WanAndroid onWillFocus");
+                    }}
+                    onDidFocus={ ()=>{
+                        console.log("WanAndroid onDidFocus");
+                        if (Platform.OS === 'android') {
+                            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                    onWillBlur={ ()=>{
+                        console.log("WanAndroid onWillBlur");
+                    }}
+                    onDidBlur={ ()=>{
+                        console.log("WanAndroid onDidBlur");
+                        if (Platform.OS === 'android') {
+                            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                />
                 <Swiper
                     style={styles.wrapper}
                     loop={true}

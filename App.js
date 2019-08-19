@@ -78,7 +78,6 @@ const DouBanTabStack = createStackNavigator({
             header: null,
         },
     },
-    MovieDetail: MovieDetail,
 });
 
 const MoreTabNavigator = createMaterialTopTabNavigator({
@@ -136,7 +135,8 @@ const RootStack = createStackNavigator({
     Collect: Collect,
     MyWeb: MyWeb,
     DetailKnowledge: DetailKnowledge,
-    ImagePreView: ImagePreView
+    ImagePreView: ImagePreView,
+    MovieDetail: MovieDetail,
 });
 
 

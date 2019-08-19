@@ -7,9 +7,11 @@ import {
     View,
     ActivityIndicator,
     NativeModules,
-    DeviceEventEmitter
+    BackHandler
 } from "react-native";
 import { Card } from 'react-native-elements'
+import { NavigationEvents } from 'react-navigation';
+
 import BaseComponent from "./BaseComponent";
 
 let pageNo = 1;//当前第几页
@@ -113,21 +115,45 @@ export default class AndroidGank extends BaseComponent {
     }
 
     render() {
+
         if (this.state.isLoading) {
             return this.renderLoadingView();
         }
         return (
-            <FlatList
-                data={this.state.dataArray}
-                renderItem={this.renderWelfare.bind(this)}
-                ListFooterComponent={this._renderFooter.bind(this)}
-                onEndReached={this._onEndReached.bind(this)}
-                onRefresh={this._onRefresh.bind(this)}
-                refreshing={this.state.isRefreshing}
-                // ItemSeparatorComponent={ItemDivideComponent}
-                onEndReachedThreshold={0.1}
-                keyExtractor={item => item.id}
-            />
+            <View>
+                <NavigationEvents
+                    onWillFocus={ ()=>{
+                        console.log("AndroidGank onWillFocus");
+                    }}
+                    onDidFocus={ ()=>{
+                        console.log("AndroidGank onDidFocus");
+                        if (Platform.OS === 'android') {
+                            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                    onWillBlur={ ()=>{
+                        console.log("AndroidGank onWillBlur");
+                    }}
+                    onDidBlur={ ()=>{
+                        console.log("AndroidGank onDidBlur");
+                        if (Platform.OS === 'android') {
+                            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
+                        }
+                    }}
+                />
+                <FlatList
+                    data={this.state.dataArray}
+                    renderItem={this.renderWelfare.bind(this)}
+                    ListFooterComponent={this._renderFooter.bind(this)}
+                    onEndReached={this._onEndReached.bind(this)}
+                    onRefresh={this._onRefresh.bind(this)}
+                    refreshing={this.state.isRefreshing}
+                    // ItemSeparatorComponent={ItemDivideComponent}
+                    onEndReachedThreshold={0.1}
+                    keyExtractor={item => item.id}
+                />
+            </View>
+
         );
     }
 
