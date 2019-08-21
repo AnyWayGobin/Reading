@@ -43,3 +43,5 @@ callback、promise、DeviceEventEmitter
 ref this.refs是什么东西？
 
 引用android资源文件夹下的图片的时候，直接 uri:'资源名称' 就可以了
+
+如果一个组件的变量写成export，另外一个组件想引用这个组件的该变量，该怎么操作？

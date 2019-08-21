@@ -5,9 +5,10 @@ import {
     TextInput,
     Text,
     TouchableOpacity,
-    ToastAndroid,
+    ToastAndroid, DeviceEventEmitter,
 } from 'react-native';
 import StorageOpt from "./StorageOpt"
+import More from "./More"
 
 
 const REQUEST_REGISTER = "https://www.wanandroid.com/user/register";
@@ -112,14 +113,19 @@ export default class RegisterLogin extends Component {
             .then(response => {
                 if (response.status === 200) {
                     const cookie = response.headers.map['set-cookie'];
-                    StorageOpt.save("cookie", cookie,null);
+                    if (cookie !== undefined) {
+                        StorageOpt.save("username", this.state.username);
+                        StorageOpt.save("cookie", cookie,null);
+                    }
                     return response.json();
                 }
             }).then(result => {
                     if (result.errorCode === -1) {
                         ToastAndroid.show(result.errorMsg, ToastAndroid.LONG);
                     } else if (result.errorCode === 0) {//登录成功
-                        this.props.navigation.navigate("Collect")
+                        DeviceEventEmitter.emit(More.EVENT_NAME);
+                        this.props.navigation.goBack();
+                        ToastAndroid.show("登录成功", ToastAndroid.LONG);
                     }
         })
             .catch((error) => {

@@ -6,10 +6,8 @@ import {
     Text,
     View,
     ActivityIndicator,
-    DeviceEventEmitter, BackHandler
 } from "react-native";
 import moment from "moment/moment";
-import BaseComponent from "./BaseComponent";
 
 let pageNo = 1;//当前第几页
 const REQUEST_URL = "http://m2.qiushibaike.com/article/list/text?page=";
@@ -17,11 +15,15 @@ const REQUEST_URL = "http://m2.qiushibaike.com/article/list/text?page=";
 /**
  * 段子
  */
-export default class Duanzi extends BaseComponent {
+export default class Duanzi extends Component {
 
-    static navigationOptions = {
-        title: "段子"
-    };
+    static navigationOptions = () => ({
+        title: '糗事百科',
+        headerStyle: {
+            backgroundColor: '#549cf8',
+        },
+        headerTintColor: '#fff',
+    });
 
     constructor(props) {
         super(props);

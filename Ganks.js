@@ -8,9 +8,7 @@ import {
     Text,
     TouchableOpacity,
     View,
-    Platform,
     BackHandler,
-    ToastAndroid
 } from "react-native";
 import PopupDialog, {DialogContent, DialogTitle, SlideAnimation} from 'react-native-popup-dialog';
 import StorageOpt from "./StorageOpt"
@@ -53,7 +51,6 @@ export default class Ganks extends BaseComponent {
         this.fetchData(category, pageNo);
         this.fetchCategory();
         this.listener = DeviceEventEmitter.addListener(EVENT_NAME, (category) => {
-            console.log("listener = " + category);
             this.category = category;
             this.pageNo = 1;
             this.fetchData(category, pageNo);
@@ -272,7 +269,6 @@ class FlatListHeaderComponent extends Component {
     }
 
     onBackAndroid = () => {
-        console.log("FlatListHeaderComponent onBackAndroid");
         if (this.state.showDialog) {
             this.setState({
                 showDialog: false
@@ -335,7 +331,6 @@ class FlatListHeaderComponent extends Component {
     showFadeAnimationDialog() {
         BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
         DeviceEventEmitter.emit(UNREGISTER_EVENT_NAME);
-        
         this.fetchCategory();
     }
 
@@ -399,7 +394,7 @@ const styles = StyleSheet.create({
     },
     button: {
         width: 80,
-        backgroundColor: 'skyblue',
+        backgroundColor: '#549cf8',
         padding: 10,
         margin: 20,
         borderRadius: 5

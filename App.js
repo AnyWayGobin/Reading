@@ -19,6 +19,7 @@ import MovieDetail from "./MovieDetail";
 import RegisterLogin from './RegisterLogin';
 import More from './More';
 import Collect from './Collect';
+import Duanzi from './Duanzi';
 
 
 //-----------------------------主页（玩安卓）-----------------------------------
@@ -121,7 +122,12 @@ const bottomNavigator = createBottomTabNavigator({
                 tabBarLabel:"豆瓣",
             }
         },
-        MoreTab: MoreTabNavigator
+        MoreTab: {
+            screen:MoreTabNavigator,
+            navigationOptions:{
+                tabBarLabel:"更多",
+            }
+        }
     });
 
 const RootStack = createStackNavigator({
@@ -137,6 +143,7 @@ const RootStack = createStackNavigator({
     DetailKnowledge: DetailKnowledge,
     ImagePreView: ImagePreView,
     MovieDetail: MovieDetail,
+    Duanzi:Duanzi
 });
 
 

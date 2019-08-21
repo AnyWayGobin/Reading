@@ -3,23 +3,53 @@ import {
     StyleSheet,
     View,
     Text,
-    TouchableOpacity,
+    TouchableOpacity, DeviceEventEmitter,
 } from 'react-native';
 import BaseComponent from "./BaseComponent";
 import StorageOpt from "./StorageOpt";
 
-let cookie = "";
+const EVENT_NAME = "listener_register_login";
 
 export default class More extends BaseComponent {
 
+    static EVENT_NAME = "listener_register_login";
+
+    static navigationOptions = {
+        title: "更多"
+    };
+
     constructor(props) {
         super(props);
+        this.state={
+            username:""
+        }
     }
 
     componentWillMount() {
-        StorageOpt.loaddata("cookie", (result) => {
-            cookie = result;
+        super.componentWillMount();
+        StorageOpt.loaddata("username", (result) => {
+            this.setState({
+                username: result
+            });
         });
+    }
+
+    componentDidMount() {
+        this.listener = DeviceEventEmitter.addListener(EVENT_NAME, () => {
+            console.log("more listener");
+            StorageOpt.loaddata("username", (result) => {
+                this.setState({
+                    username: result
+                });
+            });
+        });
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        if (this.listener) {
+            this.listener.remove();
+        }
     }
 
     _onNavigateDuanzi = () => {
@@ -27,18 +57,30 @@ export default class More extends BaseComponent {
     };
 
     _onRegisterLogin = () => {
-        this.props.navigation.navigate("Duanzi");
+        if (this.state.username === "") {
+            this.props.navigation.navigate("RegisterLogin");
+        }
+    };
+
+    _onNavigateCollect = () => {
+        if (this.state.username === "") {
+            this.props.navigation.navigate("RegisterLogin");
+        } else {
+            this.props.navigation.navigate("Collect");
+        }
     };
 
     render() {
-
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.button} onPress={this._onNavigateDuanzi}>
                     <Text style={{color:'white'}}>段 子</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} onPress={this._onRegisterLogin}>
-                    <Text style={{color:'white'}}>注册登录</Text>
+                    <Text style={{color:'white'}}>{this.state.username === "" ? "注册登录" : "已登录(" + this.state.username + ")"}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={this._onNavigateCollect}>
+                    <Text style={{color:'white'}}>我的收藏</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -50,18 +92,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
-    textInput: {
-        fontSize:20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginLeft: 20,
-        marginRight: 20
-    },
     button: {
-        alignItems: 'center',
-        backgroundColor: '#549cf8',
+        alignItems: 'flex-start',
+        backgroundColor: 'gray',
         padding: 10,
-        margin: 20,
-        borderRadius: 5
+        marginTop: 20
     }
 });
