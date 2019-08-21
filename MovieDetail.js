@@ -10,8 +10,6 @@ import {
     Dimensions,
     TouchableOpacity, BackHandler, ToastAndroid
 } from "react-native";
-import BaseComponent from "./BaseComponent";
-import {NavigationEvents} from "react-navigation";
 
 const {height,width} =  Dimensions.get('window');
 
@@ -21,7 +19,7 @@ let movieId = -1;
 /**
  * 电影详情
  */
-export default class MovieDetail extends BaseComponent {
+export default class MovieDetail extends Component {
 
     static navigationOptions = ({ navigation }) => ({
 
@@ -79,21 +77,6 @@ export default class MovieDetail extends BaseComponent {
         return (
             <ScrollView>
                 <View style={styles.container}>
-
-                    <NavigationEvents
-                        onWillFocus={ ()=>{
-                            console.log("onWillFocus");
-                        }}
-                        onDidFocus={ ()=>{
-                            console.log("onDidFocus");
-                        }}
-                        onWillBlur={ ()=>{
-                            console.log("onWillBlur");
-                        }}
-                        onDidBlur={ ()=>{
-                            console.log("onDidBlur");
-                        }}/>
-
                     <View style={{flex:1, flexDirection:'row'}}>
                         <Image source={{uri: movie.basic.img}} style={{width: 100, height: 140, margin: 6}}/>
                         <View style={styles.content}>

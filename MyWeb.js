@@ -21,11 +21,9 @@ export default class MyWeb extends Component {
     onAndroidBackPress = () => {
         // this.webView.ref = null;
         if (this.webView.canGoBack && this.webView.ref) {//直接用对象判断，就表示它不等于null，比如这里的this.webView.ref
-            console.log("return true");
             this.webView.ref.goBack();
             return true;
         }
-        console.log("return false");
         return false;
     };
 

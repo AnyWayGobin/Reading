@@ -15,7 +15,6 @@ import {
 import PopupDialog, {DialogContent, DialogTitle, SlideAnimation} from 'react-native-popup-dialog';
 import StorageOpt from "./StorageOpt"
 import BaseComponent from "./BaseComponent"
-import {NavigationEvents} from "react-navigation";
 
 let pageNo = 1;//当前第几页
 const REQUEST_GANK_URL = "http://gank.io/api/today";

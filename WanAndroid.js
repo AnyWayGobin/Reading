@@ -11,7 +11,6 @@ import {
 import StorageOpt from "./StorageOpt"
 import Swiper from 'react-native-swiper';
 import BaseComponent from "./BaseComponent";
-import {NavigationEvents} from "react-navigation";
 
 const EVENT_NAME = "notifyChangeData";
 let category = "list";
@@ -106,39 +105,17 @@ export default class WanAndroid extends BaseComponent {
             return this.renderLoadingView();
         }
         return (
-            <View>
-                {/*<NavigationEvents
-                    onWillFocus={ ()=>{
-                        console.log("WanAndroid onWillFocus");
-                    }}
-                    onDidFocus={ ()=>{
-                        console.log("WanAndroid onDidFocus");
-                        if (Platform.OS === 'android') {
-                            BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
-                        }
-                    }}
-                    onWillBlur={ ()=>{
-                        console.log("WanAndroid onWillBlur");
-                    }}
-                    onDidBlur={ ()=>{
-                        console.log("WanAndroid onDidBlur");
-                        if (Platform.OS === 'android') {
-                            BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
-                        }
-                    }}
-                />*/}
-                <FlatList
-                    data={this.state.dataArray}
-                    renderItem={this.renderData.bind(this)}
-                    ListHeaderComponent={FlatListHeaderComponent}
-                    ListFooterComponent={this._renderFooter.bind(this)}
-                    onEndReached={this._onEndReached.bind(this)}
-                    onRefresh={this._onRefresh.bind(this)}
-                    refreshing={this.state.isRefreshing}
-                    ItemSeparatorComponent={ItemDivideComponent}
-                    onEndReachedThreshold={0.1}
-                    keyExtractor={item => item.id} />
-            </View>
+            <FlatList
+                data={this.state.dataArray}
+                renderItem={this.renderData.bind(this)}
+                ListHeaderComponent={FlatListHeaderComponent}
+                ListFooterComponent={this._renderFooter.bind(this)}
+                onEndReached={this._onEndReached.bind(this)}
+                onRefresh={this._onRefresh.bind(this)}
+                refreshing={this.state.isRefreshing}
+                ItemSeparatorComponent={ItemDivideComponent}
+                onEndReachedThreshold={0.1}
+                keyExtractor={item => item.id} />
         );
     }
 
@@ -155,23 +132,52 @@ export default class WanAndroid extends BaseComponent {
     }
 
     renderData({item}) {
-        return (
-            <View style={styles.container}>
-                <View style={styles.authorTime}>
-                    <Text></Text>
-                    <Text style={{margin: 5}}>{item.chapterName}</Text>
-                </View>
-                <View style={styles.authorTime}>
-                    <Text style={{margin: 5}} onPress={this._clickItem.bind(this, item)}>{item.title}</Text>
-                </View>
-                <View style={styles.authorTime}>
-                    <Text style={styles.author}>{item.niceDate}.{item.author}</Text>
-                    <TouchableOpacity onPress={this._clickCollect.bind(this, item)}>
-                        <Image source={item.collect ? require('./image/ic_collected.png') : require('./image/ic_uncollect.png')} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        );
+        if (category === 'list') {
+            return (
+                <TouchableOpacity activeOpacity={0.6} onPress={this._clickItem.bind(this, item)}>
+                    <View style={styles.container}>
+                        <View style={styles.authorTime}>
+                            <Image source={{uri: item.fresh ? 'icon_new' : ''}} style={{width:25 ,height:25, marginLeft: 5}}/>
+                            <Text style={{margin: 5}}>{item.chapterName}</Text>
+                        </View>
+                        <View style={styles.authorTime}>
+                            <Text style={{margin: 5}} >{item.title}</Text>
+                        </View>
+                        <View style={styles.authorTime}>
+                            <Text style={styles.author}>{item.niceDate}.{item.author}</Text>
+                            <TouchableOpacity onPress={this._clickCollect.bind(this, item)}>
+                                <Image source={item.collect ? require('./image/ic_collected.png') : require('./image/ic_uncollect.png')} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            );
+        } else {
+            return (
+                <TouchableOpacity activeOpacity={0.6} onPress={this._clickItem.bind(this, item)}>
+                    <View style={styles.container}>
+                        <View style={styles.authorTime}>
+                            <Image source={{uri: item.fresh ? 'icon_new' : ''}} style={{width:25 ,height:25, marginLeft: 5}}/>
+                            <Text style={{margin: 5}}>{item.chapterName}</Text>
+                        </View>
+                        <View style={{flex:1, flexDirection:'row'}}>
+                            <Image source={{uri:item.envelopePic}} style={{width:60,height:80, marginLeft: 5, marginBottom: 5}}/>
+                            <View style={{flex:1, flexDirection:'column'}}>
+                                <View style={styles.authorTime}>
+                                    <Text numberOfLines={2} ellipsizeMode={'tail'} style={{margin: 5}} >{item.title}</Text>
+                                </View>
+                                <View style={styles.authorTime}>
+                                    <Text style={styles.author}>{item.niceDate}.{item.author}</Text>
+                                    <TouchableOpacity onPress={this._clickCollect.bind(this, item)}>
+                                        <Image source={item.collect ? require('./image/ic_collected.png') : require('./image/ic_uncollect.png')} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            );
+        }
     }
 
     _clickItem = (item) => {

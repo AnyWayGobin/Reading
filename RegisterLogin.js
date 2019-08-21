@@ -84,6 +84,8 @@ export default class RegisterLogin extends Component {
             console.log(response.status);
             if (response.status === 200) {
                 console.log(response);
+                const cookie = response.headers.map['set-cookie'];
+                StorageOpt.save("cookie", cookie,null);
                 return response.json();
             }
             }).then(result => {
@@ -91,8 +93,8 @@ export default class RegisterLogin extends Component {
                 if (result.errorCode === -1) {
                     ToastAndroid.show(result.errorMsg, ToastAndroid.LONG);
                 } else if (result.errorCode === 0) {//注册成功
-                    this.setIsLogin();
-                    this.props.navigation.navigate("Collect")
+                    ToastAndroid.show("注册成功", ToastAndroid.LONG);
+                    this.props.navigation.goBack();
                 }
             })
             .catch((error) => {

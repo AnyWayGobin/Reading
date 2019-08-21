@@ -17,7 +17,7 @@ import HotMovie from "./HotMovie";
 import CommingMovie from "./CommingMovie";
 import MovieDetail from "./MovieDetail";
 import RegisterLogin from './RegisterLogin';
-import Duanzi from './Duanzi';
+import More from './More';
 import Collect from './Collect';
 
 
@@ -81,10 +81,10 @@ const DouBanTabStack = createStackNavigator({
 });
 
 const MoreTabNavigator = createMaterialTopTabNavigator({
-        Duanzi: Duanzi,
+        More: More,
     },
     {
-        initialRouteName : "Duanzi",
+        initialRouteName : "More",
         navigationOptions:{
             tabBarLabel:"更多",
         },

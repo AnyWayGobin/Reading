@@ -10,7 +10,6 @@ import {
     BackHandler
 } from "react-native";
 import { Card } from 'react-native-elements'
-import { NavigationEvents } from 'react-navigation';
 
 import BaseComponent from "./BaseComponent";
 

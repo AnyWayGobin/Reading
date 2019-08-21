@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import { Image, FlatList, StyleSheet, Text, View, ActivityIndicator,TouchableOpacity,BackHandler  } from "react-native";
 import BaseComponent from "./BaseComponent";
-import {NavigationEvents} from "react-navigation";
 
 let pageNo = 1;//当前第几页
-const REQUEST_URL = "https://gank.io/api/data/福利/10/";
+const REQUEST_URL = "http://gank.io/api/data/福利/10/";
 let itemNo=0;//item的个数
 
 /**
@@ -74,18 +73,16 @@ export default class Welfare extends BaseComponent {
             return this.renderLoadingView();
         }
         return (
-            <View>
-                <FlatList
-                    data={this.state.dataArray}
-                    renderItem={this.renderWelfare.bind(this)}
-                    ListFooterComponent={this._renderFooter.bind(this)}
-                    onEndReached={this._onEndReached.bind(this)}
-                    onEndReachedThreshold={0.002}
-                    keyExtractor={item => item.id}
-                    horizontal={false}
-                    numColumns = "2"
-                />
-            </View>
+            <FlatList
+                data={this.state.dataArray}
+                renderItem={this.renderWelfare.bind(this)}
+                ListFooterComponent={this._renderFooter.bind(this)}
+                onEndReached={this._onEndReached.bind(this)}
+                onEndReachedThreshold={0.002}
+                keyExtractor={item => item.id}
+                horizontal={false}
+                numColumns = "2"
+            />
         );
     }
 
@@ -94,7 +91,7 @@ export default class Welfare extends BaseComponent {
             <View style={styles.container}>
                 <ActivityIndicator
                     animating={true}
-                    color='skyblue'
+                    color='#549cf8'
                     size="large"
                 />
             </View>
