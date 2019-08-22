@@ -47,6 +47,7 @@ const FoundTabNavigator = createMaterialTopTabNavigator({
         AndroidGank: AndroidGank,
         Ganks: Ganks,
         Welfare: Welfare,
+        Duanzi: Duanzi
     },
     {
         initialRouteName : "AndroidGank",
@@ -122,12 +123,7 @@ const bottomNavigator = createBottomTabNavigator({
                 tabBarLabel:"豆瓣",
             }
         },
-        MoreTab: {
-            screen:MoreTabNavigator,
-            navigationOptions:{
-                tabBarLabel:"更多",
-            }
-        }
+        More:More
     });
 
 const RootStack = createStackNavigator({

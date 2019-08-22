@@ -1,39 +1,50 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, StyleSheet, View} from "react-native";
-import {createAppContainer, createMaterialTopTabNavigator,} from 'react-navigation';
+import {
+    Image,
+    FlatList,
+    StyleSheet,
+    Text,
+    View,
+    ActivityIndicator,
+    TouchableOpacity, DeviceEventEmitter, ToastAndroid,BackHandler
+} from "react-native";
+import {
+    createBottomTabNavigator,
+    createAppContainer, createMaterialTopTabNavigator, createStackNavigator,
+} from 'react-navigation';
+import StorageOpt from "./StorageOpt";
 import ArticleListPage from "./ArticleListPage";
-
 const REQUEST_URL = "https://wanandroid.com/wxarticle/chapters/json";
 
-let Container;
 
 /**
  * 玩安卓的公众号
  */
-export default class More extends Component {
+export default class ArticleTabPage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             isLoading: true,
-            // dataArray: [],
+            dataArray: [],
         };
     }
 
     componentDidMount() {
-        this.fetchData();
+        StorageOpt.loaddata("cookie", (result) => {
+            this.fetchData(result);
+        });
     }
 
-    fetchData() {
-        fetch(REQUEST_URL)
+    fetchData(cookie) {
+        fetch(REQUEST_URL, {method : 'GET', headers: {'Cookie': cookie}})
             .then((response) => {
                 return response.json();
             })
             .then((responseData) => {
                 let data = responseData.data;
-                this.createContainer(data);
                 this.setState({
-                    // dataArray: this.state.dataArray.concat(data),
+                    dataArray: this.state.dataArray.concat(data),
                     isLoading: false,
                 });
                 data = null;
@@ -47,50 +58,44 @@ export default class More extends Component {
         if (this.state.isLoading) {
             return this.renderLoadingView();
         }
-        // let A = createAppContainer(this.createTabsNavigator());
-        return <Container/>;
-    }
-
-    createTabs(data) {
-        let tabPages = {};
-        data.map((value, i) => {
-            tabPages[value.name] = {
-                screen: () => <ArticleListPage chapterId={value.id} navigation={this.props.navigation}/>
-            }
-        });
-        return tabPages;
-    }
-
-    createTabsNavigator(data) {
-        return createMaterialTopTabNavigator(this.createTabs(data), {
+        let A = createAppContainer(createMaterialTopTabNavigator(this.createTabs(), {
             lazy: true,
             swipeEnabled: true,
             animationEnabled: true,
             backBehavior: "none",
             tabBarOptions: {
                 activeTintColor: 'white',
+                inactiveTintColor: config.colorPrimaryLight,
                 scrollEnabled: true,
                 tabStyle: {
-                    minWidth: 30
+                    minWidth: 50
                 },
                 labelStyle: {
-                    fontSize: 12,
+                    fontSize: 14,
                 },
                 indicatorStyle: {
                     height: 2,
                     backgroundColor: 'white'
                 },
                 style: {
-                    height: 50,
+                    backgroundColor: config.colorPrimary,
+                    height: 45,
                     justifyContent: 'center',
                     alignItems: 'center'
                 }
-            },
-        });
+            }
+        }));
+        return <A/>;
     }
 
-    createContainer(data) {
-        Container = createAppContainer(this.createTabsNavigator(data));
+    createTabs() {
+        let tabPages = {};
+        this.state.data.map((value, i) => {
+            tabPages[value.name] = {
+                screen: () => <ArticleListPage chapterId={value.id} navigation={this.props.navigation}/>
+            }
+        });
+        return tabPages;
     }
 
     renderLoadingView() {
@@ -105,13 +110,3 @@ export default class More extends Component {
         );
     }
 }
-
-const styles = StyleSheet.create({
-    loading: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-});
-
