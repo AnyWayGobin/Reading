@@ -45,3 +45,6 @@ ref this.refs是什么东西？
 引用android资源文件夹下的图片的时候，直接 uri:'资源名称' 就可以了
 
 如果一个组件的变量写成export，另外一个组件想引用这个组件的该变量，该怎么操作？
+
+当A页面引用B页面的时候，在B页面引用C页面，C页面需要跳转到D页面，或者使用this.props这个属性的时候，
+需要从A页面将navigation={this.props.navigation}传递到C页面,这样在C页面使用this.props才不会报找不到该对象的错误

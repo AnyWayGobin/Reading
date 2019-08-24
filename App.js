@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import {
     createBottomTabNavigator,
-    createAppContainer, createMaterialTopTabNavigator, createStackNavigator,
+    createAppContainer, createMaterialTopTabNavigator, createStackNavigator,createDrawerNavigator
 } from 'react-navigation';
 
 import AndroidGank from "./AndroidGank";
@@ -20,6 +20,7 @@ import RegisterLogin from './RegisterLogin';
 import More from './More';
 import Collect from './Collect';
 import Duanzi from './Duanzi';
+import DrawerPage from "./DrawerPage";
 
 
 //-----------------------------主页（玩安卓）-----------------------------------
@@ -123,12 +124,36 @@ const bottomNavigator = createBottomTabNavigator({
                 tabBarLabel:"豆瓣",
             }
         },
-        More:More
+        More: {
+            screen:More,
+            navigationOptions:{
+                tabBarLabel:"更多",
+            }
+        }
+    });
+
+const Main = createDrawerNavigator(
+    {
+        home: {
+            screen: bottomNavigator,
+            navigationOptions: {
+                drawerLockMode: "unlocked",
+            }
+        }
+    },
+    {
+        drawerWidth: 250,
+        drawerPosition: "left",
+        drawerType: 'slide',
+        contentComponent: DrawerPage,
+        drawerLockMode: "locked-open",
+        initialRouteName: 'home',
+        contentOptions: {},
     });
 
 const RootStack = createStackNavigator({
     BottomNavigator: {
-        screen: bottomNavigator,
+        screen: Main,
         navigationOptions: {
             header: null,
         },

@@ -1,21 +1,11 @@
 import React, {Component} from 'react';
-import {
-    Image,
-    FlatList,
-    StyleSheet,
-    Text,
-    View,
-    ActivityIndicator,
-    TouchableOpacity, DeviceEventEmitter, ToastAndroid,BackHandler
-} from "react-native";
-import {
-    createBottomTabNavigator,
-    createAppContainer, createMaterialTopTabNavigator, createStackNavigator,
-} from 'react-navigation';
-import StorageOpt from "./StorageOpt";
+import {ActivityIndicator, StyleSheet, View} from "react-native";
+import {createAppContainer, createMaterialTopTabNavigator,} from 'react-navigation';
 import ArticleListPage from "./ArticleListPage";
+
 const REQUEST_URL = "https://wanandroid.com/wxarticle/chapters/json";
 
+let Container;
 
 /**
  * 玩安卓的公众号
@@ -26,25 +16,24 @@ export default class ArticleTabPage extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            dataArray: [],
+            // dataArray: [],
         };
     }
 
     componentDidMount() {
-        StorageOpt.loaddata("cookie", (result) => {
-            this.fetchData(result);
-        });
+        this.fetchData();
     }
 
-    fetchData(cookie) {
-        fetch(REQUEST_URL, {method : 'GET', headers: {'Cookie': cookie}})
+    fetchData() {
+        fetch(REQUEST_URL)
             .then((response) => {
                 return response.json();
             })
             .then((responseData) => {
                 let data = responseData.data;
+                this.createContainer(data);
                 this.setState({
-                    dataArray: this.state.dataArray.concat(data),
+                    // dataArray: this.state.dataArray.concat(data),
                     isLoading: false,
                 });
                 data = null;
@@ -58,44 +47,50 @@ export default class ArticleTabPage extends Component {
         if (this.state.isLoading) {
             return this.renderLoadingView();
         }
-        let A = createAppContainer(createMaterialTopTabNavigator(this.createTabs(), {
+        // let A = createAppContainer(this.createTabsNavigator());
+        return <Container/>;
+    }
+
+    createTabs(data) {
+        let tabPages = {};
+        data.map((value, i) => {
+            tabPages[value.name] = {
+                screen: () => <ArticleListPage chapterId={value.id} navigation={this.props.navigation}/>
+            }
+        });
+        return tabPages;
+    }
+
+    createTabsNavigator(data) {
+        return createMaterialTopTabNavigator(this.createTabs(data), {
             lazy: true,
             swipeEnabled: true,
             animationEnabled: true,
             backBehavior: "none",
             tabBarOptions: {
                 activeTintColor: 'white',
-                inactiveTintColor: config.colorPrimaryLight,
                 scrollEnabled: true,
                 tabStyle: {
-                    minWidth: 50
+                    minWidth: 30
                 },
                 labelStyle: {
-                    fontSize: 14,
+                    fontSize: 12,
                 },
                 indicatorStyle: {
                     height: 2,
                     backgroundColor: 'white'
                 },
                 style: {
-                    backgroundColor: config.colorPrimary,
-                    height: 45,
+                    height: 50,
                     justifyContent: 'center',
                     alignItems: 'center'
                 }
-            }
-        }));
-        return <A/>;
+            },
+        });
     }
 
-    createTabs() {
-        let tabPages = {};
-        this.state.data.map((value, i) => {
-            tabPages[value.name] = {
-                screen: () => <ArticleListPage chapterId={value.id} navigation={this.props.navigation}/>
-            }
-        });
-        return tabPages;
+    createContainer(data) {
+        Container = createAppContainer(this.createTabsNavigator(data));
     }
 
     renderLoadingView() {
@@ -110,3 +105,13 @@ export default class ArticleTabPage extends Component {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    loading: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+});
+
