@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import StorageOpt from "./StorageOpt"
 import More from "./More"
+import * as config from "./src/config";
 
 
 const REQUEST_REGISTER = "https://www.wanandroid.com/user/register";
@@ -86,7 +87,10 @@ export default class RegisterLogin extends Component {
             if (response.status === 200) {
                 console.log(response);
                 const cookie = response.headers.map['set-cookie'];
-                StorageOpt.save("cookie", cookie,null);
+                if (cookie) {
+                    StorageOpt.save(config.USER_NAME, this.state.username);
+                    StorageOpt.save("cookie", cookie,null);
+                }
                 return response.json();
             }
             }).then(result => {
@@ -95,6 +99,7 @@ export default class RegisterLogin extends Component {
                     ToastAndroid.show(result.errorMsg, ToastAndroid.LONG);
                 } else if (result.errorCode === 0) {//注册成功
                     ToastAndroid.show("注册成功", ToastAndroid.LONG);
+                    DeviceEventEmitter.emit(config.LOGIN_CALLBACK);
                     this.props.navigation.goBack();
                 }
             })
@@ -113,9 +118,9 @@ export default class RegisterLogin extends Component {
             .then(response => {
                 if (response.status === 200) {
                     const cookie = response.headers.map['set-cookie'];
-                    if (cookie !== undefined) {
-                        StorageOpt.save("username", this.state.username);
-                        StorageOpt.save("cookie", cookie,null);
+                    if (cookie) {
+                        StorageOpt.save(config.USER_NAME, this.state.username);
+                        StorageOpt.save(config.COOKIE, cookie,null);
                     }
                     return response.json();
                 }
@@ -124,6 +129,7 @@ export default class RegisterLogin extends Component {
                         ToastAndroid.show(result.errorMsg, ToastAndroid.LONG);
                     } else if (result.errorCode === 0) {//登录成功
                         DeviceEventEmitter.emit(More.EVENT_NAME);
+                        DeviceEventEmitter.emit(config.LOGIN_CALLBACK, this.state.username);
                         this.props.navigation.goBack();
                         ToastAndroid.show("登录成功", ToastAndroid.LONG);
                     }
@@ -145,10 +151,10 @@ export default class RegisterLogin extends Component {
                     placeholder="密码"
                            secureTextEntry={true}
                     onChangeText={(text) => {this.setState({password:text})}}/>
-                <TouchableOpacity style={styles.button} onPress={this._onLoginPress}>
+                <TouchableOpacity activeOpacity={0.6} style={styles.button} onPress={this._onLoginPress}>
                     <Text style={{color:'white'}}>登 录</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={this._onRegisterPress}>
+                <TouchableOpacity activeOpacity={0.6} style={styles.button} onPress={this._onRegisterPress}>
                     <Text style={{color:'white'}}>注 册</Text>
                 </TouchableOpacity>
 

@@ -1,5 +1,20 @@
 import React from 'react';
-import {Image, Platform, ScrollView, StyleSheet, Text, TouchableHighlight, View} from 'react-native';
+import {
+    Image,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    Alert,
+    DeviceEventEmitter,
+    ToastAndroid
+} from 'react-native';
+import * as config from './src/config'
+import StorageOpt from "./StorageOpt";
+
+const LOGOUT_REQUEST_URL = "https://www.wanandroid.com/user/logout/json";
 
 export default class DrawerPage extends React.Component {
 
@@ -10,63 +25,107 @@ export default class DrawerPage extends React.Component {
         };
     }
 
+    componentDidMount() {
+        StorageOpt.loaddata(config.USER_NAME, (result) => {
+            this.setState({
+                userName:result
+            })
+        });
+        this.listener = DeviceEventEmitter.addListener(config.LOGIN_CALLBACK, (username) => {
+            this.setState({
+                userName:username
+            })
+        });
+    }
+
+    componentWillUnmount() {
+        if (this.listener) {
+            this.listener.remove();
+        }
+    }
+
+    fetchLogout() {
+        fetch(LOGOUT_REQUEST_URL)
+            .then(response => {
+                if (response.status === 200) {
+                    StorageOpt.delete(config.USER_NAME);
+                    StorageOpt.delete(config.COOKIE);
+                    return response.json();
+                }
+            }).then(result => {
+                if (result.errorCode === -1) {
+                    ToastAndroid.show(result.errorMsg, ToastAndroid.LONG);
+                } else if (result.errorCode === 0) {//退出成功
+                    ToastAndroid.show("退出成功", ToastAndroid.LONG);
+                    this.setState({
+                        userName:''
+                    });
+                    this.props.navigation.toggleDrawer();
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
 
     render() {
         return <ScrollView>
-            <TouchableHighlight onPress={() => {
+            <TouchableOpacity activeOpacity={0.6} onPress={() => {
                 if (this.state.userName) {
                 } else {
-                    this.props.navigation.navigate('Login');
+                    this.props.navigation.navigate('RegisterLogin');
                 }
             }}>
                 <View style={styles.header}>
-                    <Image style={styles.avatar} source={{}}/>
+                    <Image style={styles.avatar} source={require('./res/ic_avatar.png')}/>
                     <Text style={styles.userName}>
                         {this.state.userName ? this.state.userName : "还没有登录..."}
                     </Text>
                 </View>
-            </TouchableHighlight>
-            {this.getItemView("收藏夹", () => {
+            </TouchableOpacity>
+            {this.getItemView("收藏夹", require('./res/ic_favorite_not.png'), () => {
                 if (this.state.userName) {
-                    this.props.navigation.navigate('Favorite');
+                    this.props.navigation.navigate('Collect');
                 } else {
-                    this.props.navigation.navigate('Login');
+                    this.props.navigation.navigate('RegisterLogin');
                 }
             })}
-            {this.getItemView("任务清单", () => {
-                if (this.state.userName) {
-                    this.props.navigation.navigate('Todo');
-                } else {
-                    this.props.navigation.navigate('Login');
-                }
+            {this.getItemView("关于", require('./res/ic_about.png'), () => {
+                this.props.navigation.navigate('MyWeb', {url:'https://github.com/AnyWayGobin/Reading', desc:'Reading'});
             })}
-            {this.getItemView("关于", () => {
-                this.props.navigation.navigate('About');
-            })}
-            {this.state.userName ? this.getItemView("退出登录", () => {
+            {this.state.userName ? this.getItemView("退出登录", require('./res/ic_logout.png'), () => {
+                Alert.alert("退出登录", "确定要退出吗？", [
+                        {text: '确定', onPress: () => {
+                            this.fetchLogout()
+                            }},
+                        {text: '取消', style: 'cancel'}],
+                    {cancelable: true });
             }) : null}
         </ScrollView>
     }
 
     getItemView(action, image, onPress) {
-        return <TouchableHighlight onPress={onPress}>
+        return <TouchableOpacity activeOpacity={0.6} onPress={onPress}>
             <View style={styles.itemView}>
                 <Image style={styles.actionImage} source={image}/>
                 <Text style={styles.action}>
                     {action}
                 </Text>
             </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
     }
+
 }
 
 const styles = StyleSheet.create({
     header: {
-        height: Platform.OS === 'ios' ? 150 + 20 : 150,
+        backgroundColor: config.colorPrimary,
+        height: 150,
         justifyContent: 'center',
         alignItems: 'center',
         ...Platform.select({
-            ios: {paddingTop: 20},
+            ios: {paddingTop: config.iosPaddingTop},
             android: {}
         })
     },
@@ -94,7 +153,7 @@ const styles = StyleSheet.create({
     },
     action: {
         fontSize: 14,
-        color: 'blue',
+        color: config.textColorPrimary,
         marginLeft: 15,
     },
 });
