@@ -48,3 +48,8 @@ ref this.refs是什么东西？
 
 当A页面引用B页面的时候，在B页面引用C页面，C页面需要跳转到D页面，或者使用this.props这个属性的时候，
 需要从A页面将navigation={this.props.navigation}传递到C页面,这样在C页面使用this.props才不会报找不到该对象的错误
+
+<ArticleListPage chapterId={value.id} navigation={this.props.navigation}/>  相当于给ArticleListPage页面定义了两个属性：chapterId和navigation，
+这样在ArticleListPage页面就可以使用this.props.属性名称 获取到该属性的值
+
+async/await会返回一个Promise对象

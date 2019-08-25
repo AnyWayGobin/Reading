@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types'
 import {
     Image,
     FlatList,
@@ -30,6 +31,10 @@ export default class ArticleListPage extends Component {
             showFoot: 0, // 控制foot， 0：隐藏footer  1：已加载完成,没有更多数据   2 ：显示加载中
         };
     }
+
+    static propTypes = {
+        chapterId: PropTypes.number.isRequired
+    };
 
     componentDidMount() {
         this.fetchData()
