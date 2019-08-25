@@ -4,6 +4,7 @@ import {
     createBottomTabNavigator,
     createAppContainer, createMaterialTopTabNavigator, createStackNavigator,createDrawerNavigator
 } from 'react-navigation';
+import {Image, StyleSheet} from "react-native";
 
 import AndroidGank from "./AndroidGank";
 import Ganks from "./Ganks";
@@ -104,30 +105,48 @@ const bottomNavigator = createBottomTabNavigator({
             screen:WanAndroidTabStack,
             navigationOptions:{
                 tabBarLabel:"主页",
+                tabBarIcon: ({ tintColor }) => (
+                    <Image
+                        source={{uri:'ic_home'}}
+                        style={[styles.tabBar, { tintColor: tintColor }]}
+                    />
+                )
             }
         },
         FoundTab: {
             screen:FoundTabStack,
             navigationOptions: {
                 tabBarLabel:"发现",
-                /*tabBarIcon: ({ tintColor }) => (
+                tabBarIcon: ({ tintColor }) => (
                     <Image
-                        source={require('./img/ic_action_collection.png')}
-                        style={[styles.icon, { tintColor: tintColor }]}
+                        source={{uri:'ic_project'}}
+                        style={[styles.tabBar, { tintColor: tintColor }]}
                     />
-                )*/
+                )
             }
         },
         DouBanTab: {
             screen:DouBanTabStack,
             navigationOptions:{
                 tabBarLabel:"豆瓣",
+                tabBarIcon: ({ tintColor }) => (
+                    <Image
+                        source={{uri:'ic_navigation'}}
+                        style={[styles.tabBar, { tintColor: tintColor }]}
+                    />
+                )
             }
         },
         More: {
             screen:More,
             navigationOptions:{
                 tabBarLabel:"更多",
+                tabBarIcon: ({ tintColor }) => (
+                    <Image
+                        source={{uri:'ic_dashboard'}}
+                        style={[styles.tabBar, { tintColor: tintColor }]}
+                    />
+                )
             }
         }
     });
@@ -175,3 +194,10 @@ export default class App extends React.Component {
         return <AppContainer />;
     }
 }
+
+const styles = StyleSheet.create({
+    tabBar: {
+        width: 25,
+        height: 25,
+    }
+});

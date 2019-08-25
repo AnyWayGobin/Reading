@@ -121,7 +121,7 @@ export default class Collect extends Component {
                 <View style={styles.authorTime}>
                     <Text style={styles.author}>{item.niceDate}.{item.author}</Text>
                     <TouchableOpacity onPress={this.unCollectFetchData.bind(this, item)}>
-                        <Image source={require('./image/ic_collected.png')} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
+                        <Image source={{uri: 'ic_collected'}} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
                     </TouchableOpacity>
                 </View>
             </View>

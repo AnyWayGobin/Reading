@@ -104,7 +104,7 @@ export default class DetailKnowledge extends React.Component {
                 <View style={styles.authorTime}>
                     <Text style={styles.author}>{item.niceDate}.{item.author}</Text>
                     <TouchableOpacity onPress={this._clickCollect.bind(this, item)}>
-                        <Image source={item.collect ? require('./image/ic_collected.png') : require('./image/ic_uncollect.png')} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
+                        <Image source={{uri: item.collect ? 'ic_collected' : 'ic_uncollect'}} style={{width:25,height:25,marginRight: 5, marginBottom: 5}}/>
                     </TouchableOpacity>
                 </View>
             </View>

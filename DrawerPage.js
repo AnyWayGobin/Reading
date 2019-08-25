@@ -78,23 +78,23 @@ export default class DrawerPage extends React.Component {
                 }
             }}>
                 <View style={styles.header}>
-                    <Image style={styles.avatar} source={require('./res/ic_avatar.png')}/>
+                    <Image style={styles.avatar} source={{uri:'ic_avatar'}}/>
                     <Text style={styles.userName}>
                         {this.state.userName ? this.state.userName : "还没有登录..."}
                     </Text>
                 </View>
             </TouchableOpacity>
-            {this.getItemView("收藏夹", require('./res/ic_favorite_not.png'), () => {
+            {this.getItemView("收藏夹", {uri:'ic_favorite_not'}, () => {
                 if (this.state.userName) {
                     this.props.navigation.navigate('Collect');
                 } else {
                     this.props.navigation.navigate('RegisterLogin');
                 }
             })}
-            {this.getItemView("关于", require('./res/ic_about.png'), () => {
+            {this.getItemView("关于", {uri:'ic_about'}, () => {
                 this.props.navigation.navigate('MyWeb', {url:'https://github.com/AnyWayGobin/Reading', desc:'Reading'});
             })}
-            {this.state.userName ? this.getItemView("退出登录", require('./res/ic_logout.png'), () => {
+            {this.state.userName ? this.getItemView("退出登录", {uri:'ic_logout'}, () => {
                 Alert.alert("退出登录", "确定要退出吗？", [
                         {text: '确定', onPress: () => {
                             this.fetchLogout()
