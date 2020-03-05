@@ -1,3 +1,9 @@
+![main_page_1](screenshot/main_page_1.jpg)  ![main_page_2](screenshot/main_page_2.jpg)
+
+
+
+
+
 https://react-native-community.github.io/upgrade-helper/?from=0.59.10&to=0.60.4
 
 yarn add react-native
