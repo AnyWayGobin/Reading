@@ -1,4 +1,4 @@
-![main_page_1](screenshot/main_page_1.jpg)  ![main_page_2](screenshot/main_page_2.jpg)
+<img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/main_page_1.jpg" width="360" height="480" alert="main_page_1"/>
 
 
 
