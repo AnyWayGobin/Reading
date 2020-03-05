@@ -1,7 +1,10 @@
-<img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/main_page_1.jpg" width="280" height="480" alert="main_page_1"/>  <img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/main_page_2.jpg" width="280" height="480" alert="main_page_2"/>  <img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/found_page_1.jpg" width="280" height="480" alert="main_page_1"/>
+<img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/main_page_1.jpg" width="280" height="480" alert="main_page_1"/>    <img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/main_page_2.jpg" width="280" height="480" alert="main_page_2"/>    <img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/found_page_1.jpg" width="280" height="480" alert="found_page_1"/>
 
 
+<img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/found_page_2.jpg" width="280" height="480" alert="found_page_2"/>    <img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/movie_detail_page.jpg" width="280" height="480" alert="movie_detail_page"/>    <img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/movie_page.jpg" width="280" height="480" alert="movie_page"/>
 
+
+<img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/more_page.jpg" width="280" height="480" alert="more_page"/>    <img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/article_page.jpg" width="280" height="480" alert="article_page"/> 
 
 
 https://react-native-community.github.io/upgrade-helper/?from=0.59.10&to=0.60.4
