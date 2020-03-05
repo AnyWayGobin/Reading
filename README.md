@@ -1,3 +1,5 @@
+用React Native写的一个APP，接口数据来源于WanAndroid。仅用于学习React Native，不做任何商业化用途。
+
 <img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/main_page_1.jpg" width="280" height="480" alert="main_page_1"/>    <img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/main_page_2.jpg" width="280" height="480" alert="main_page_2"/>    <img src="https://github.com/AnyWayGobin/iReading/blob/master/screenshot/found_page_1.jpg" width="280" height="480" alert="found_page_1"/>
 
 
